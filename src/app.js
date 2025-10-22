@@ -12,7 +12,7 @@ import { swaggerUi, swaggerSpec } from './swagger.js'
 // ★ (미래) 패스포트/라우터/DB import 지점
 // import passport from 'passport'
 // import passportConfig from './auth/passport/index.js'
-// import { sequelize } from './models/index.js'
+import { sequelize } from './models/index.js'
 import indexRouter from './routes/index.js'
 
 dotenv.config()
@@ -72,8 +72,8 @@ app.use((err, _req, res, _next) => {
 })
 
 // ★ (미래) DB sync 지점 – 보통 server.js에서 리슨 전 실행 권장
-// await sequelize.authenticate()
-// await sequelize.sync()
+await sequelize.authenticate()
+await sequelize.sync()
 
 // ───────── 실행 (socket 미사용 버전)
 app.listen(app.get('port'), () => {

@@ -24,7 +24,7 @@ export default class User extends Model {
       )
    }
 
-//    static associate(db) {
-//     //   관계는 나중에 여기서 연결
-//    }
+   //    static associate(db) {
+   //     //   관계는 나중에 여기서 연결
+   //    }
 }
