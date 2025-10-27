@@ -3,6 +3,8 @@ import { Router } from 'express'
 
 // 라우터 모듈 (기본 포맷)
 import authRouter from './auth.js'
+import commentRouter from './comment.js'
+import replyRouter from './reply.js'
 
 const router = Router()
 
@@ -12,6 +14,8 @@ router.get('/', (_req, res) => res.json({ ok: true, root: true }))
 
 // 퍼블릭(유저) 라우터
 router.use('/auth', authRouter)
+router.use('/comments', commentRouter)
+router.use('/replies', replyRouter)
 
 // 관리자 라우터
 // router.use('/api/admin', adminRouter)

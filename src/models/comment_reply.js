@@ -19,7 +19,7 @@ export default class CommentReply extends Model {
                type: DataTypes.INTEGER,
                allowNull: false,
             },
-            contnet: {
+            content: {
                type: DataTypes.TEXT,
                allowNull: false,
             },
@@ -27,7 +27,7 @@ export default class CommentReply extends Model {
          {
             sequelize,
             modelName: 'CommentReply',
-            tableName: 'comment_replys',
+            tableName: 'comment_replies',
             timestamps: true,
             paranoid: true,
             underscored: true,
@@ -48,10 +48,9 @@ export default class CommentReply extends Model {
          targetKey: 'user_id',
          onDelete: 'CASCADE',
       })
-      CommentReply.belongsTo(db.CommentReplyReport, {
+      CommentReply.hasMany(db.CommentReplyReport, {
          foreignKey: 'reply_id',
-         targetKey: 'reply_id',
-         onDelete: 'CASCADE',
+         sourceKey: 'reply_id',
       })
    }
 }
