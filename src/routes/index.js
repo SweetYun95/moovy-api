@@ -1,23 +1,26 @@
 // moovy-api/src/routes/index.js
 import { Router } from 'express'
 
-// 라우터 모듈 (기본 포맷)
+// 퍼블릭(유저)
 import authRouter from './auth.js'
 import commentRouter from './comment.js'
 import replyRouter from './reply.js'
 
+// 관리자
+import adminRouter from './admin/index.js' // <- 추가
+
 const router = Router()
 
-// 헬스 & 루트
+// 기본
 router.get('/health', (_req, res) => res.json({ ok: true }))
 router.get('/', (_req, res) => res.json({ ok: true, root: true }))
 
-// 퍼블릭(유저) 라우터
+// 퍼블릭
 router.use('/auth', authRouter)
 router.use('/comments', commentRouter)
 router.use('/replies', replyRouter)
 
-// 관리자 라우터
-// router.use('/api/admin', adminRouter)
+// 어드민 네임스페이스
+router.use('/admin', adminRouter) // 최종 경로: /admin/users, /admin/users/:id ...
 
 export default router

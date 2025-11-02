@@ -8,8 +8,9 @@ import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import { swaggerUi, swaggerSpec } from './swagger.js'
+import { hydrateAuthFromToken } from './routes/middlewares.js'
 
-// ★ (미래) 패스포트/라우터/DB import 지점
+// (미래) 패스포트/라우터/DB import 지점
 // import passport from 'passport'
 // import passportConfig from './auth/passport/index.js'
 import db from './models/index.js'
@@ -20,7 +21,7 @@ dotenv.config()
 const app = express()
 app.set('port', process.env.PORT || 8000)
 
-// ───────── 미들웨어
+// ───────── 공통 미들웨어
 app.use(helmet())
 app.use(
    cors({
@@ -42,7 +43,10 @@ const sessionMiddleware = session({
 })
 app.use(sessionMiddleware)
 
-// ★ (미래) 패스포트 초기화 지점 – 세션 이후, 라우터 이전
+// JWT 토큰이 있으면 req.authUser에 주입(세션과 공존)
+app.use(hydrateAuthFromToken)
+
+// (미래) 패스포트 초기화 – 세션 이후, 라우터 이전
 // app.use(passport.initialize())
 // app.use(passport.session())
 // passportConfig()
@@ -50,8 +54,8 @@ app.use(sessionMiddleware)
 // ───────── Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-// 메인 라우터 장착
-app.use('/', indexRouter)
+// ───────── 메인 라우터
+app.use('/api', indexRouter)
 
 // ───────── 헬스
 app.get('/healthz', (_req, res) => res.status(200).json({ ok: true }))
@@ -68,14 +72,16 @@ app.use((err, _req, res, _next) => {
    const status = err.status || 500
    const message = err.message || '서버 내부 오류'
    if (process.env.NODE_ENV !== 'production') console.error(err)
-   res.status(status).json({ success: false, message })
+   res.status(status).json({ success: false, message, details: err.details })
 })
 
-// ★ (미래) DB sync 지점 – 보통 server.js에서 리슨 전 실행 권장
+// ───────── DB 연결 & 동기화 (보통 server.js에서 실행하지만 여기서 처리)
 await db.sequelize.authenticate()
 await db.sequelize.sync()
 
-// ───────── 실행 (socket 미사용 버전)
+// ───────── 실행
 app.listen(app.get('port'), () => {
    console.log(`🚀 Moovy API on http://localhost:${app.get('port')}`)
 })
+
+export default app
