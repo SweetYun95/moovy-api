@@ -36,10 +36,16 @@ export default class Favorite extends Model {
             modelName: 'Favorite',
             tableName: 'favorites',
             timestamps: true,
-            paranoid: true,
+            paranoid: false,
             underscored: true,
             charset: 'utf8',
             collate: 'utf8_general_ci',
+            indexes: [
+               {
+                  unique: true,
+                  fields: ['user_id', 'content_id'],
+               },
+            ],
          }
       )
    }

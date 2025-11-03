@@ -1,5 +1,7 @@
 // moovy-api/src/controllers/replyController.js
-import { CommentReply, CommentTbl, User } from '../models/index.js'
+import db from '../models/index.js'
+const { CommentReply, CommentTbl, User } = db
+
 import { Op } from 'sequelize'
 
 /**

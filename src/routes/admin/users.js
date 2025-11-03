@@ -3,7 +3,7 @@ import express from 'express'
 import { body, param, query, validationResult } from 'express-validator'
 import db from '../../models/index.js' // 프로젝트의 index.js export 확인
 // 관리자 인증/권한 미들웨어 (프로젝트 기존 미들웨어로 교체)
-import { requireAdminAuth, requireRole } from '../middlewares/adminAuth.js' // 경로/이름은 프로젝트에 맞게
+import { requireAdminAuth, requireRole } from '../middlewares.js' // 경로/이름은 프로젝트에 맞게
 
 const router = express.Router()
 
