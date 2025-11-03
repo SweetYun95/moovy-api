@@ -10,9 +10,9 @@ import dotenv from 'dotenv'
 import { swaggerUi, swaggerSpec } from './swagger.js'
 import { hydrateAuthFromToken } from './routes/middlewares.js'
 
-// (미래) 패스포트/라우터/DB import 지점
-// import passport from 'passport'
-// import passportConfig from './auth/passport/index.js'
+// ───────── 패스포트/라우터/DB import 지점
+import passport from 'passport'
+import passportConfig from './passport/index.js'
 import db from './models/index.js'
 import indexRouter from './routes/index.js'
 
@@ -46,10 +46,10 @@ app.use(sessionMiddleware)
 // JWT 토큰이 있으면 req.authUser에 주입(세션과 공존)
 app.use(hydrateAuthFromToken)
 
-// (미래) 패스포트 초기화 – 세션 이후, 라우터 이전
-// app.use(passport.initialize())
-// app.use(passport.session())
-// passportConfig()
+// ───────── 패스포트 초기화 – 세션 이후, 라우터 이전
+passportConfig()
+app.use(passport.initialize())
+app.use(passport.session())
 
 // ───────── Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
