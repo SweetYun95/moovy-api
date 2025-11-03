@@ -31,7 +31,7 @@ export default class Rating extends Model {
                onUpdate: 'CASCADE',
             },
             point: {
-               type: DataTypes.INTEGER,
+               type: DataTypes.TINYINT(10),
                allowNull: false,
             },
          },
@@ -40,10 +40,16 @@ export default class Rating extends Model {
             modelName: 'Rating',
             tableName: 'ratings',
             timestamps: true,
-            paranoid: true,
+            paranoid: false,
             underscored: true,
             charset: 'utf8',
             collate: 'utf8_general_ci',
+            indexes: [
+               {
+                  unique: true,
+                  fields: ['user_id', 'content_id'],
+               },
+            ],
          }
       )
    }

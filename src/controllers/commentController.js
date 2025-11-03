@@ -1,5 +1,6 @@
 // moovy-api/src/controllers/commentController.js
-import { CommentTbl, User, Topic } from '../models/index.js'
+import db from '../models/index.js'
+const { CommentTbl, User, Topic } = db
 
 // 코멘트 작성
 export const createComment = async (req, res) => {

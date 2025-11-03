@@ -15,10 +15,10 @@ export default class VideoContent extends Model {
                type: DataTypes.STRING(100),
                allowNull: false,
             },
-            release_data: {
+            release_date: {
                type: DataTypes.DATE,
             },
-            gnere: {
+            genre: {
                type: DataTypes.STRING(30),
             },
             time: {
