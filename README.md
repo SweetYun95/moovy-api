@@ -74,6 +74,37 @@ moovy-api/
 │     └─ validators/	# validate(schema) 같은 미들웨어 래퍼를 둬서 라우트에서 router.post('/login', validate(loginSchema), ctrl.login) 형태로 사용.
 └─ package.json
 ```
+### (routes ↔ validations ↔ controllers ↔ services)
+#### 1) 큰 그림: 의존 방향
+```scss
+Client
+  ↓
+routes  ──(middleware, validate)──▶ controllers ──▶ services ──▶ models(DB)
+                                ▲
+                           validations(dto/schemas)
+```
+- **단방향** 의존이 핵심: `routes → controllers → services → models`.
+- validations는 어느 레이어에도 _로직_을 넣지 않고, **입력 정제/검증**만 담당.
+#### 2) 레이어별 역할 & 경계
+##### routes (입구)
+- URL/HTTP 메서드 매핑: POST /favorites/:contentId/toggle
+- 미들웨어 체인을 구성: requireAuth, validate(...), rateLimit 등.
+- 컨트롤러만 호출. 비즈니스/DB 호출 금지.
+##### validations (신원 검사 & 세차)
+- schemas/ (zod): 형식 검증. 숫자/문자/범위/enum 등.
+- dto/: 검증 통과 값을 정규화(trim, lowerCase, 숫자 변환, default 채우기).
+- validators/validate.js: 스키마 실행 → 실패 시 400, 성공 시 req.validated에 결과 저장.
+- 장점: 컨트롤러는 깨끗한 데이터만 받는다.
+##### controllers (오케스트라 지휘자)
+- HTTP 요청/응답을 조율. 상태코드, 헤더, 쿠키, 응답 형식 결정.
+- 비즈니스 규칙은 services에 위임.
+- try/catch로 에러를 받아 표준 에러로 변환해 next(err) 또는 응답.
+##### services (핵심 로직/트랜잭션)
+- 도메인 규칙, DB 접근, 여러 모델 조합, 트랜잭션 경계.
+- 재사용 가능한 단위 함수로 쪼개기 좋고, 단위 테스트 최적화 지점.
+- 컨트롤러는 결과를 받아 응답으로만 변환.
+##### models (Sequelize)
+- 테이블 스키마 & 연관관계. services가 직접 사용.
 ---
 ## 6) 스크립트 & 실행
 `package.json` (앱 엔트리 = `src/app.js`)
