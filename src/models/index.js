@@ -31,7 +31,7 @@ const config = cfg[env]
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
    ...config,
-   logging: false, // ✅ SQL 로그 출력 끄기
+   // logging: false, // ✅ SQL 로그 출력 끄기
 })
 
 const db = {
