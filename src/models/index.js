@@ -29,7 +29,10 @@ dotenv.config()
 const env = process.env.NODE_ENV || 'development'
 const config = cfg[env]
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config)
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+   ...config,
+   // logging: false, // ✅ SQL 로그 출력 끄기
+})
 
 const db = {
    sequelize,

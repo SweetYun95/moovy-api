@@ -50,6 +50,18 @@ export default class User extends Model {
                allowNull: false,
                defaultValue: 'ACTIVE',
             },
+            loginAttempts: {
+               type: DataTypes.INTEGER,
+               defaultValue: 0,
+            },
+            lockUntil: {
+               type: DataTypes.DATE,
+               allowNull: true,
+            },
+            profile_img: {
+               type: DataTypes.TEXT,
+               allowNull: true,
+            },
          },
          {
             sequelize,
@@ -129,5 +141,8 @@ export default class User extends Model {
          sourceKey: 'user_id',
          as: 'reported',
       })
+   }
+   isLocked() {
+      return !!(this.lockUntil && this.lockUntil > Date.now())
    }
 }
