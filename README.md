@@ -55,23 +55,23 @@ module.exports = {
 moovy-api/
 ├─ uploads/
 ├─ src/
-│  ├─ app.js                # Express 앱(미들웨어/라우터/문서)
-│  ├─ swagger.js            # swagger-jsdoc 옵션/스펙
+│  ├─ app.js 		# 엔트리 파일
+│  ├─ auth/
+│  │  └─ passport/
+│  │     └─ strategies/
 │  ├─ config/
-│  │  ├─ env.js             # dotenv 래퍼(선택)
-│  │  └─ config.cjs         # Sequelize CLI용(CJS) - 선택
+│  ├─ controllers/
+│  ├─ middlewares/
 │  ├─ models/
-│  │  ├─ index.js           # Sequelize 초기화/associate
-│  │  └─ user.js            # 예시 모델
 │  ├─ routes/
-│  │  ├─ index.js           # 루트 라우터
-│  │  └─ auth.js            # 인증 예시 라우터(스텁)
-│  ├─ routes_swagger/       # Swagger 주석 파일(선택)
-│  ├─ middlewares/          # 공통 미들웨어(선택)
-│  ├─ utils/                # 유틸(선택)
-│  └─ validations/          # zod 스키마(선택)
-├─ docs/
-├─ tests/
+│  │  └─ admin/
+│  ├─ routes_swagger/
+│  │  └─ admin/
+│  ├─ utils/
+│  └─ validations/
+│     ├─ schemas/	# zod 등으로 요청/응답 스키마 정의
+│     ├─ dto/		# 스키마 통과 데이터를 정규화/형 변환(trim, lowerCase, 포맷 통일 등).
+│     └─ validators/	# validate(schema) 같은 미들웨어 래퍼를 둬서 라우트에서 router.post('/login', validate(loginSchema), ctrl.login) 형태로 사용.
 └─ package.json
 ```
 ---
