@@ -5,9 +5,10 @@ import { Router } from 'express'
 import authRouter from './auth.js'
 import commentRouter from './comment.js'
 import replyRouter from './reply.js'
+import ratingRouter from './rating.route.js'
 
 // 관리자
-import adminRouter from './admin/index.js' // <- 추가
+import adminRouter from './admin/index.js'
 
 const router = Router()
 
@@ -19,8 +20,9 @@ router.get('/', (_req, res) => res.json({ ok: true, root: true }))
 router.use('/auth', authRouter)
 router.use('/comments', commentRouter)
 router.use('/replies', replyRouter)
+router.use('/ratings', ratingRouter)
 
 // 어드민 네임스페이스
-router.use('/admin', adminRouter) // 최종 경로: /admin/users, /admin/users/:id ...
+router.use('/admin', adminRouter)
 
 export default router
