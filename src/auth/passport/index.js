@@ -1,11 +1,11 @@
-// moovy-api/src/passport/index.js
+// moovy-api/src/auth/passport/index.js
 
 import passport from 'passport'
 
 import './strategies/localStrategy.js'
 import './strategies/googleStrategy.js'
 import './strategies/kakaoStrategy.js'
-import db from '../models/index.js'
+import db from '../../models/index.js'
 const { User } = db
 
 passport.serializeUser((user, done) => done(null, user.id)) //로그인, 회원가입시 실행됨

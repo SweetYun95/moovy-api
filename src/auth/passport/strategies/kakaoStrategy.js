@@ -1,9 +1,9 @@
-// moovy-api/src/passport/strategies/kakaoStrategy.js
+// moovy-api/src/auth/passport/strategies/kakaoStrategy.js
 
 import 'dotenv/config'
 import passport from 'passport'
 import { Strategy as KakaoStrategy } from 'passport-kakao'
-import db from '../../models/index.js'
+import db from '../../../models/index.js'
 
 const { User } = db
 
