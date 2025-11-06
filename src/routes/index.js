@@ -2,7 +2,7 @@
 import { Router } from 'express'
 
 // 퍼블릭(유저)
-import authRouter from './auth.js'
+import authRouter from './auth.route.js'
 import commentRouter from './comment.js'
 import replyRouter from './reply.js'
 import ratingRouter from './rating.route.js'
