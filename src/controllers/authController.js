@@ -1,5 +1,6 @@
 // moovy-api/src/controllers/authController.js
 import * as svc from '../services/auth.service.js'
+import { normalizeProvide } from '../validations/dto/auth.dto.js'
 
 //로컬 회원가입
 export const localSignUp = async (req, res, next) => {

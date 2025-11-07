@@ -10,7 +10,6 @@ export const signUp = async (email, name, password) => {
    try {
       const exUser = await User.findOne({ where: { email }, transaction })
       if (exUser) {
-         await transaction.rollback()
          const error = new Error('이미 가입된 이메일 입니다.')
          error.status = 400
          throw error
@@ -28,7 +27,16 @@ export const signUp = async (email, name, password) => {
       )
 
       await transaction.commit()
-      return { success: true, data: { newUser } }
+      return {
+         success: true,
+         data: {
+            // newUser: {
+            //    user_id: newUser.user_id,
+            //    name: newUser.name,
+            //    email: newUser.email,
+            // },
+         },
+      }
    } catch (e) {
       await transaction.rollback()
       throw e

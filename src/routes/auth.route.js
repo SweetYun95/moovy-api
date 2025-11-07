@@ -14,7 +14,7 @@ const router = Router()
 // ─────────────────────────────
 
 //회원가입
-router.post('/signup', isNotLoggedIn, ctrl.localSignUp)
+router.post('/signup', isNotLoggedIn, validate({ body: 'asdf' }), ctrl.localSignUp)
 
 //로그인
 router.post('/login', isNotLoggedIn, ctrl.localLogIn)
@@ -59,21 +59,21 @@ router.get(
 // ─────────────────────────────
 // 로그아웃
 // ─────────────────────────────
-router.get('/logout', isLoggedIn, ctrl.logOut)
+router.post('/logout', isLoggedIn, ctrl.logOut)
 
 // ─────────────────────────────
 // 로그인중인 사용자 정보 가져오기(로그인 여부 확인)
 // ─────────────────────────────
-router.get('/me', isLoggedIn, ctrl.getMe)
+router.get('/me', ctrl.getMe)
 
 // ─────────────────────────────
 // 연동 해제
 // ─────────────────────────────
-router.get('/disconnect/:provide', isLoggedIn, validate({ params: provideParamSchema }), ctrl.socialDisconnect)
+router.delete('/disconnect/:provide', isLoggedIn, validate({ params: provideParamSchema }), ctrl.socialDisconnect)
 
 // ─────────────────────────────
 // 회원 탈퇴
 // ─────────────────────────────
-router.get('/withdraw', isLoggedIn, ctrl.withdraw)
+router.delete('/withdraw', isLoggedIn, ctrl.withdraw)
 
 export default router
