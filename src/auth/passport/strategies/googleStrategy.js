@@ -1,8 +1,8 @@
-// moovy-api/src/passport/strategies/googleStrategy.js
+// moovy-api/src/auth/passport/strategies/googleStrategy.js
 import 'dotenv/config'
 import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
-import db from '../../models/index.js'
+import db from '../../../models/index.js'
 
 const { User } = db
 
