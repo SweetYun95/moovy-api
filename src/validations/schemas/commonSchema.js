@@ -1,4 +1,4 @@
-// moovy-api/src/validations/schemas/common.schema.js
+// moovy-api/src/validations/schemas/commonSchema.js
 import { z } from 'zod'
 
 export const paginationSchema = z.object({

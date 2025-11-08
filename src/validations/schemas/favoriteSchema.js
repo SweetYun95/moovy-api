@@ -1,4 +1,4 @@
-// moovy-api/src/validations/schemas/favorite.schema.js
+// moovy-api/src/validations/schemas/favoriteSchema.js
 import { z } from 'zod'
 
 // :contentId 경로 파라미터
