@@ -1,7 +1,7 @@
-// moovy-api/src/routes/rating.route.js
+// moovy-api/src/routes/ratingRoute.js
 import { Router } from 'express'
 import { isLoggedIn } from './middlewares.js'
-import * as ratingCtrl from '../controllers/rating.controller.js'
+import * as ratingCtrl from '../controllers/ratingController.js'
 import { body, param } from 'express-validator'
 
 const router = Router()

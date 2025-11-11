@@ -1,6 +1,6 @@
-// moovy-api/src/controllers/rating.controller.js
+// moovy-api/src/controllers/ratingController.js
 import { validationResult } from 'express-validator'
-import * as ratingService from '../services/rating.service.js'
+import * as ratingService from '../services/ratingService.js'
 
 // [POST] 별점 등록/수정
 export const upsertRating = async (req, res, next) => {
