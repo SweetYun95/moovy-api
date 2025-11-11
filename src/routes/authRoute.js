@@ -1,10 +1,10 @@
-// moovy-api/src/routes/auth.js
+// moovy-api/src/routes/authRoute.js
 import { Router } from 'express'
 import passport from 'passport'
 
 import { validate } from '../validations/validators/validate.js'
 import * as ctrl from '../controllers/authController.js'
-import { provideParamSchema } from '../validations/schemas/auth.schema.js'
+import { provideParamSchema, signUpSchema } from '../validations/schemas/authSchema.js'
 import { isLoggedIn, isNotLoggedIn } from './middlewares.js'
 
 const router = Router()
@@ -14,10 +14,10 @@ const router = Router()
 // ─────────────────────────────
 
 //회원가입
-router.post('/signup', isNotLoggedIn, validate({ body: 'asdf' }), ctrl.localSignUp)
+router.post('/signup', isNotLoggedIn, validate({ body: signUpSchema }), ctrl.localSignUp)
 
 //로그인
-router.post('/login', isNotLoggedIn, ctrl.localLogIn)
+router.post('/login', isNotLoggedIn, validate({ body: loginSchema }), ctrl.localLogIn)
 
 // ─────────────────────────────
 //카카오 로그인/회원가입
@@ -62,9 +62,14 @@ router.get(
 router.post('/logout', isLoggedIn, ctrl.logOut)
 
 // ─────────────────────────────
-// 로그인중인 사용자 정보 가져오기(로그인 여부 확인)
+// 로그인 여부 확인
 // ─────────────────────────────
-router.get('/me', ctrl.getMe)
+router.get('/state', ctrl.state)
+
+// ─────────────────────────────
+// 로그인중인 사용자 정보 가져오기
+// ─────────────────────────────
+router.get('/me', isLoggedIn, ctrl.getMe)
 
 // ─────────────────────────────
 // 연동 해제
