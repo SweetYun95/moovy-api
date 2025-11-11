@@ -1,4 +1,4 @@
-// moovy-api/src/services/auth.service.js
+// moovy-api/src/services/authService.js
 import bcrypt from 'bcrypt'
 
 import db, { sequelize } from '../models/index.js'
@@ -30,11 +30,11 @@ export const signUp = async (email, name, password) => {
       return {
          success: true,
          data: {
-            // newUser: {
-            //    user_id: newUser.user_id,
-            //    name: newUser.name,
-            //    email: newUser.email,
-            // },
+            newUser: {
+               user_id: newUser.user_id,
+               name: newUser.name,
+               email: newUser.email,
+            },
          },
       }
    } catch (e) {

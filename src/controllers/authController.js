@@ -1,11 +1,13 @@
 // moovy-api/src/controllers/authController.js
-import * as svc from '../services/auth.service.js'
-import { normalizeProvide } from '../validations/dto/auth.dto.js'
+
+import * as svc from '../services/authService.js'
+import { normalizeProvide } from '../validations/dto/authDto.js'
+import passport from 'passport'
 
 //로컬 회원가입
 export const localSignUp = async (req, res, next) => {
    try {
-      const { email, password, name } = req.body
+      const { email, password, name } = req.validated.body
       const result = await svc.signUp(email, name, password)
       res.status(201).json(result)
    } catch (error) {
@@ -15,6 +17,7 @@ export const localSignUp = async (req, res, next) => {
 
 //로컬 로그인
 export const localLogIn = async (req, res, next) => {
+   req.body = req.validated?.body ?? req.body
    passport.authenticate('local', (err, user, info) => {
       if (err) return next(err)
       if (!user) {
@@ -54,26 +57,39 @@ export const logOut = async (req, res, next) => {
       next(e)
    }
 }
-
-//로그인중인 사용자 정보 가져오기(로그인 여부 확인)
-export const getMe = async (req, res, next) => {
+// 로그인 여부 확인
+export const state = async (req, res, next) => {
    try {
       if (req.isAuthenticated()) {
-         res.json({
+         return res.json({
             success: true,
-            isLoggedIn: false,
-            data: {
-               email: req.user.email,
-               name: req.user.name,
-               state: req.user.state,
-            },
+            isLoggedIn: true,
          })
       } else {
-         res.json({
+         return res.json({
             success: true,
             isLoggedIn: false,
          })
       }
+   } catch (e) {
+      next(e)
+   }
+}
+
+//로그인중인 사용자 정보 가져오기
+export const getMe = async (req, res, next) => {
+   try {
+      const user = req.user
+
+      res.json({
+         success: true,
+         data: {
+            user: {
+               ...user,
+               password: null,
+            },
+         },
+      })
    } catch (e) {
       next(e)
    }
