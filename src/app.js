@@ -8,7 +8,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import { swaggerUi, swaggerSpec } from './swagger.js'
-import { hydrateAuthFromToken } from './routes/middlewares.js'
+import { hydrateAuthFromToken } from './middlewares/middlewares.js'
 
 // ───────── 패스포트/라우터/DB import 지점
 import './auth/passport/index.js'
