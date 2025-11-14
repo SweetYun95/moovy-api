@@ -10,6 +10,7 @@ const MAX_LOGIN_ATTEMPTS = 5
 const LOCK_TIME = 2 * 60 * 60 * 1000 // 2시간 (밀리초)
 
 passport.use(
+   'local-user',
    new LocalStrategy(
       {
          usernameField: 'email',

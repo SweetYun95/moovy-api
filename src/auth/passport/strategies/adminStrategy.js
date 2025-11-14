@@ -7,6 +7,7 @@ import db from '../../../models/index.js'
 const { AdminUser } = db
 
 passport.use(
+   'local-admin',
    new LocalStrategy(
       {
          usernameField: 'email',

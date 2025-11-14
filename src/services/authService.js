@@ -103,8 +103,10 @@ export const withdraw = async (userId) => {
       }
 
       await user.destroy({ transaction })
+      transaction.commit()
       return { success: true }
    } catch (e) {
+      transaction.rollback()
       throw e
    }
 }
