@@ -64,7 +64,7 @@ router.post('/logout', isLoggedIn, ctrl.logOut)
 // ─────────────────────────────
 // 로그인 여부 확인
 // ─────────────────────────────
-router.get('/state', ctrl.state)
+router.get('/check', ctrl.check)
 
 // ─────────────────────────────
 // 로그인중인 사용자 정보 가져오기

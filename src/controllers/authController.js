@@ -58,7 +58,7 @@ export const logOut = async (req, res, next) => {
    }
 }
 // 로그인 여부 확인
-export const state = async (req, res, next) => {
+export const check = async (req, res, next) => {
    try {
       if (req.isAuthenticated()) {
          return res.json({
