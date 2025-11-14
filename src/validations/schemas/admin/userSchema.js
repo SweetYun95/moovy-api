@@ -1,4 +1,4 @@
-// moovy-api/src/validations/schemas/admin/userSchemas.js
+// moovy-api/src/validations/schemas/admin/userSchema.js
 import { z } from 'zod'
 import { USER_STATE, PROVIDER_TYPES, USER_SORTABLE_FIELDS, ORDER_DIRECTIONS } from '../../../constants/admin/userConstants.js'
 
@@ -24,15 +24,15 @@ export const listUsersQuerySchema = z.object({
 
 // 제재 생성
 export const createSanctionBodySchema = z.object({
-   start_at: z.string().datetime().optional(), // ISO8601 문자열
-   end_at: z.string().datetime(), // ISO8601 문자열
+   start_at: z.string().isoDatetime().optional(), // ISO8601 문자열
+   end_at: z.string().isoDatetime(), // ISO8601 문자열
    reason: z.string().trim().min(2).max(2000),
 })
 
 // 제재 수정
 export const updateSanctionBodySchema = z.object({
    reason: z.string().trim().min(1).max(2000).optional(),
-   end_at: z.string().datetime().optional(),
+   end_at: z.string().isoDatetime().optional(),
    early_release: z.coerce.boolean().optional(),
 })
 

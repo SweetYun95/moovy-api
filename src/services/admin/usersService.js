@@ -69,12 +69,12 @@ export async function createSanction({ user_id, admin_id, start_at, end_at, reas
          paranoid: false,
          lock: t.LOCK.UPDATE,
       })
-      if (!user) throw httpError(404, 'User not found')
-      if (user.state === USER_STATE.DELETED) throw httpError(400, 'Cannot sanction a deleted user')
+      if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
+      if (user.state === USER_STATE.DELETED) throw httpError(400, '탈퇴 처리된 사용자는 제재할 수 없습니다.')
 
       const start = start_at ? new Date(start_at) : new Date()
       const end = new Date(end_at)
-      if (end <= start) throw httpError(400, 'end_at must be after start_at')
+      if (end <= start) throw httpError(400, '제재 종료일은 시작일 이후여야 합니다.')
 
       const sanction = await db.UserSanction.create({ user_id, admin_id, start_at: start, end_at: end, reason }, { transaction: t })
 
@@ -92,14 +92,14 @@ export async function updateSanction({ user_id, id, reason, end_at, early_releas
          transaction: t,
          lock: t.LOCK.UPDATE,
       })
-      if (!sanction) throw httpError(404, 'Sanction not found')
+      if (!sanction) throw httpError(404, '제재 이력을 찾을 수 없습니다.')
 
       const patch = {}
       if (reason != null) patch.reason = reason
       if (end_at != null) {
          const end = new Date(end_at)
          if (sanction.start_at && end <= sanction.start_at) {
-            throw httpError(400, 'end_at must be after start_at')
+            throw httpError(400, '제재 종료일은 시작일 이후여야 합니다.')
          }
          patch.end_at = end
       }
@@ -125,7 +125,7 @@ export async function deleteSanction({ user_id, id }) {
          transaction: t,
          lock: t.LOCK.UPDATE,
       })
-      if (!sanction) throw httpError(404, 'Sanction not found')
+      if (!sanction) throw httpError(404, '제재 이력을 찾을 수 없습니다.')
 
       await sanction.destroy({ transaction: t })
 
@@ -139,7 +139,7 @@ export async function deleteSanction({ user_id, id }) {
 // ──────────────────────────────────────────────────────────────
 // 강제 탈퇴
 export async function forceWithdrawal({ user_id, admin_id, reason, confirm }) {
-   if (!confirm) throw httpError(400, 'Confirmation required')
+   if (!confirm) throw httpError(400, '강제 탈퇴를 진행하려면 confirm 값이 필요합니다.')
 
    return db.sequelize.transaction(async (t) => {
       const user = await db.User.findByPk(user_id, {
@@ -147,8 +147,8 @@ export async function forceWithdrawal({ user_id, admin_id, reason, confirm }) {
          paranoid: false,
          lock: t.LOCK.UPDATE,
       })
-      if (!user) throw httpError(404, 'User not found')
-      if (user.state === USER_STATE.DELETED) throw httpError(400, 'Already deleted')
+      if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
+      if (user.state === USER_STATE.DELETED) throw httpError(400, '이미 탈퇴 처리된 사용자입니다.')
 
       await db.UserSanction.create(
          {
