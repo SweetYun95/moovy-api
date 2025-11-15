@@ -1,6 +1,6 @@
 // moovy-api/src/routes/comment.js
 import express from 'express'
-import { isLoggedIn } from './middlewares.js'
+import { isLoggedIn } from '../middlewares/middlewares.js'
 import * as commentCtrl from '../controllers/commentController.js'
 
 const router = express.Router()
