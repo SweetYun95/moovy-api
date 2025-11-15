@@ -1,6 +1,6 @@
 // moovy-api/src/services/usersService.js
 import db from '../../models/index.js'
-import { USER_STATE } from '../constants/admin/userConstants.js'
+import { USER_STATE } from '../../constants/admin/userConstants.js'
 
 const { Op } = db.Sequelize
 
