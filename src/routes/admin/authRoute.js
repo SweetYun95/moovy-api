@@ -9,7 +9,7 @@ const router = express.Router()
 // ─────────────────────────────
 // 1) 어드민 회원가입  → POST /api/admin/auth/signup
 // ─────────────────────────────
-router.post('/signup', validate.signUpValidaotr, ctrl.signUp)
+router.post('/signup', validate.signUpValidator, ctrl.signUp)
 
 // ─────────────────────────────
 // 2) 어드민 로그인  → POST /api/admin/auth/signin

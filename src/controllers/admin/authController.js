@@ -1,11 +1,12 @@
 // moovy-api/src/controllers/admin/authController.js
-import * as auhtService from '../../services/admin/authService.js'
+import * as authService from '../../services/admin/authService.js'
+import passport from 'passport'
 
 // 1) 어드민 회원가입
 export const signUp = async (req, res, next) => {
    try {
       const { email, password, name } = req.validated?.body || req.body || {}
-      const result = await auhtService.signUp(email, password, name)
+      const result = await authService.signUp(email, password, name)
       res.status(201).json(result)
    } catch (e) {
       next(e)
@@ -62,7 +63,8 @@ export const check = async (req, res, next) => {
 export const withdraw = async (req, res, next) => {
    try {
       const adminId = req.user.admin_id
-      const result = await auhtService.withdraw(adminId)
+      const result = await authService.withdraw(adminId)
+      res.json(result)
    } catch (e) {
       next(e)
    }
