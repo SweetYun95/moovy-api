@@ -1,7 +1,7 @@
 // moovy-api/src/controllers/favorite.controller.js
-import * as svc from '../services/favorite.service.js'
-import { normalizePagination } from '../validations/dto/common.dto.js'
-import { normalizeContentId } from '../validations/dto/favorite.dto.js'
+import * as svc from '../services/favoriteService.js'
+import { normalizePagination } from '../validations/dto/commonDto.js'
+import { normalizeContentId } from '../validations/dto/favoriteDto.js'
 
 export const listMyFavorites = async (req, res, next) => {
    try {

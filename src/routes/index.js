@@ -2,10 +2,11 @@
 import { Router } from 'express'
 
 // 퍼블릭(유저)
-import authRouter from './auth.js'
+import authRouter from './auth.route.js'
 import commentRouter from './comment.js'
 import replyRouter from './reply.js'
-import ratingRouter from './rating.route.js'
+import ratingRouter from './ratingRoute.js'
+import favoriteRouter from './favoriteRoute.js'
 
 // 관리자
 import adminRouter from './admin/index.js'
@@ -21,6 +22,7 @@ router.use('/auth', authRouter)
 router.use('/comments', commentRouter)
 router.use('/replies', replyRouter)
 router.use('/ratings', ratingRouter)
+router.use('/favorites', favoriteRouter)
 
 // 어드민 네임스페이스
 router.use('/admin', adminRouter)

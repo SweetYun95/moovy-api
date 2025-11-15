@@ -1,10 +1,9 @@
-// moovy-api/src/routes/favorite.route.js
-// todo: index.js 에 연결해야함
+// moovy-api/src/routes/favoriteRoute.js
 import { Router } from 'express'
 import { requireAuth } from '../middlewares/auth.js'
-import * as ctrl from '../controllers/favorite.controller.js'
+import * as ctrl from '../controllers/favoriteController.js'
 import { validate } from '../validations/validators/validate.js'
-import { contentIdParamSchema, listFavoritesQuerySchema } from '../validations/schemas/favorite.schema.js'
+import { contentIdParamSchema, listFavoritesQuerySchema } from '../validations/schemas/favoriteSchema.js'
 
 const router = Router()
 

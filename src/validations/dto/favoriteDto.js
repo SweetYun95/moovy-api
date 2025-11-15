@@ -1,2 +1,2 @@
-// moovy-api/src/validations/dto/favorite.dto.js
+// moovy-api/src/validations/dto/favoriteDto.js
 export const normalizeContentId = (p) => Number(p.contentId)

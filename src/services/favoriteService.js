@@ -1,4 +1,4 @@
-// moovy-api/src/services/favorite.service.js
+// moovy-api/src/services/favoriteService.js
 import db from '../models/index.js'
 import { UniqueConstraintError, Op } from 'sequelize'
 

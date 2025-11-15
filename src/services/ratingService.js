@@ -1,4 +1,4 @@
-// src/services/rating.service.js
+// src/services/ratingService.js
 import db from '../models/index.js'
 const { Rating } = db
 const { fn, col } = db.sequelize

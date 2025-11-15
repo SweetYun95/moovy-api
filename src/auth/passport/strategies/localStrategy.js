@@ -1,9 +1,9 @@
-// moovy-api/src/passport/strategies/localStrategy.js
+// moovy-api/src/auth/passport/strategies/localStrategy.js
 
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import bcrypt from 'bcrypt'
-import db from '../../models/index.js'
+import db from '../../../models/index.js'
 const { User } = db
 
 const MAX_LOGIN_ATTEMPTS = 5
