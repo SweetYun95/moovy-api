@@ -5,15 +5,22 @@ import passport from 'passport'
 import './strategies/localStrategy.js'
 import './strategies/googleStrategy.js'
 import './strategies/kakaoStrategy.js'
+import './strategies/adminStrategy.js'
 import db from '../../models/index.js'
-const { User } = db
 
-passport.serializeUser((user, done) => done(null, user.user_id)) //로그인, 회원가입시 실행됨
-passport.deserializeUser(async (id, done) => {
-   //로그인된 사용자의 모든 요청시 실행되어 유저정보를 가져옴
+passport.serializeUser((entity, done) => {
+   // Admin 테이블이면 admin_id가 존재함
+   if (entity.admin_id) {
+      done(null, { id: entity.admin_id, type: 'admin' })
+   } else {
+      done(null, { id: entity.user_id, type: 'user' })
+   }
+})
+
+passport.deserializeUser(async (data, done) => {
    try {
-      const user = await User.findByPk(id)
-      if (!user) return done(null, false)
+      const Model = data.type === 'admin' ? db.AdminUser : db.User
+      const user = await Model.findByPk(data.id)
       done(null, user)
    } catch (err) {
       done(err)

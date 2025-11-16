@@ -2,14 +2,7 @@
 import { z } from 'zod'
 
 export const signUpSchema = z.object({
-   email: z
-      .string({
-         required_error: '이메일은 필수입니다.',
-         invalid_type_error: '이메일 형식이 잘못되었습니다.',
-      })
-      .min(1, '이메일은 필수입니다.')
-      .regex(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, '유효한 이메일 형식이 아닙니다.'),
-
+   email: z.email({ message: '유효한 이메일 형식이 아닙니다.' }),
    password: z
       .string({
          required_error: '비밀번호는 필수입니다.',
@@ -31,13 +24,7 @@ export const signUpSchema = z.object({
 })
 
 export const loginSchema = z.object({
-   email: z
-      .string({
-         required_error: '이메일은 필수입니다.',
-         invalid_type_error: '이메일 형식이 잘못되었습니다.',
-      })
-      .min(1, '이메일은 필수입니다.')
-      .regex(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, '유효한 이메일 형식이 아닙니다.'),
+   email: z.email({ message: '유효한 이메일 형식이 아닙니다.' }),
    password: z.string().min(1, '비밀번호는 필수입니다.'),
 })
 
