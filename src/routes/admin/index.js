@@ -8,7 +8,7 @@ const router = Router()
 
 // /admin/users/*
 router.use('/users', usersRouter)
-router.use('/auth' / authRouter)
-router.use('/qna' / qnaRouter)
+router.use('/auth', authRouter)
+router.use('/qna', qnaRouter)
 
 export default router
