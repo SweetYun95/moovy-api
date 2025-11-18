@@ -1,7 +1,7 @@
 // moovy-api/src/services/authService.js
 import bcrypt from 'bcrypt'
 
-import db from '../../models/index.js'
+import db, { sequelize } from '../../models/index.js'
 const { AdminUser } = db
 
 export const signUp = async (email, password, name) => {
