@@ -35,14 +35,14 @@ export const post = async (userId, title, content, files) => {
 }
 
 // 2) 특정 QNA 가져오기
-export const getQna = async (userId, qna_id) => {
+export const getQna = async (userId, qna_id, adminId) => {
    const qna = await Qna.findByPk(qna_id)
    if (!qna) {
       const error = new Error('문의내역을 찾을 수 없습니다.')
       error.status = 400
       throw error
    }
-   if (qna.user_id !== userId) {
+   if (qna.user_id !== userId && !adminId) {
       const error = new Error('작성자가 일치하지 않습니다.')
       error.status = 401
       throw error
@@ -93,7 +93,7 @@ export const getList = async (userId, page, limit) => {
    }
 }
 
-export const deleteQna = async (userId, qna_id) => {
+export const deleteQna = async (userId, qna_id, adminId = null) => {
    const qna = await Qna.findByPk(qna_id, {
       include: [
          {
@@ -108,7 +108,7 @@ export const deleteQna = async (userId, qna_id) => {
       error.status = 400
       throw error
    }
-   if (qna.user_id !== userId) {
+   if (qna.user_id !== userId && !adminId) {
       const error = new Error('작성자가 일치하지 않습니다.')
       error.status = 403
       throw error

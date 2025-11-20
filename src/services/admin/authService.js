@@ -1,4 +1,4 @@
-// moovy-api/src/services/authService.js
+// moovy-api/src/services/admin/authService.js
 import bcrypt from 'bcrypt'
 
 import db, { sequelize } from '../../models/index.js'
