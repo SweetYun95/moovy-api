@@ -17,7 +17,7 @@ export const post = async (userId, title, content, files) => {
 
    //2. 이미지가 있다면 이미지 저장
    if (files && files.length > 0) {
-      const imagesToInsert = req.files.map((file, index) => ({
+      const imagesToInsert = files.map((file, index) => ({
          qna_id: qna.qna_id,
          img_url: `/uploads/qna/${file.filename}`,
          order: index,
@@ -42,7 +42,7 @@ export const getQna = async (userId, qna_id) => {
       error.status = 400
       throw error
    }
-   if (qna.user_id != userId) {
+   if (qna.user_id !== userId) {
       const error = new Error('작성자가 일치하지 않습니다.')
       error.status = 401
       throw error
@@ -70,11 +70,11 @@ export const getList = async (userId, page, limit) => {
          {
             model: QnaImage,
             as: 'images',
-            attributes: ['image_url'],
+            attributes: ['img_url', 'order'],
          },
       ],
-      attributes: ['qna_id', 'title', 'content', 'order'],
-      order: [['order', 'DESC']],
+      attributes: ['qna_id', 'q_title', 'q_contnet'],
+      order: [['created_at ', 'DESC']],
       limit: safeLimit,
       offset,
    })
@@ -98,7 +98,7 @@ export const deleteQna = async (userId, qna_id) => {
       include: [
          {
             model: QnaImage,
-            as: 'images',
+            as: 'QnaImages',
             attributes: ['image_url'],
          },
       ],
@@ -108,9 +108,9 @@ export const deleteQna = async (userId, qna_id) => {
       error.status = 400
       throw error
    }
-   if (qna.user_id != userId) {
+   if (qna.user_id !== userId) {
       const error = new Error('작성자가 일치하지 않습니다.')
-      error.status = 401
+      error.status = 403
       throw error
    }
 

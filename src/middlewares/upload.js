@@ -20,7 +20,18 @@ const storage = multer.diskStorage({
    },
 })
 
+// Only allow image files (jpg, jpeg, png, gif)
+const fileFilter = (req, file, cb) => {
+   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+   if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true)
+   } else {
+      cb(new Error('Only image files (jpg, jpeg, png, gif) are allowed!'), false)
+   }
+}
+
 export const uploadQna = multer({
    storage,
-   limits: { files: 5 }, // 최대 5개
+   limits: { files: 5, fileSize: 5 * 1024 * 1024 }, // 최대 5개, 파일당 최대 5MB
+   fileFilter,
 })

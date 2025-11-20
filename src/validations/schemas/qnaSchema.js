@@ -16,7 +16,7 @@ export const getQnaSchema = z.object({
 
 export const getListSchema = z.object({
    page: z.coerce.number().int().positive().default(1),
-   limit: z.coerce.number().int().max(50).default(10),
+   limit: z.coerce.number().int().positive().max(50).default(10),
 })
 
 export const deleteQnaSchema = z.object({
