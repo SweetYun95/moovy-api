@@ -3,8 +3,8 @@ import { Router } from 'express'
 
 // 퍼블릭(유저)
 import authRouter from './authRoute.js'
-import commentRouter from './comment.js'
-import replyRouter from './reply.js'
+import commentRouter from './commentRoute.js'
+import replyRouter from './replyRoute.js'
 import ratingRouter from './ratingRoute.js'
 import favoriteRouter from './favoriteRoute.js'
 
