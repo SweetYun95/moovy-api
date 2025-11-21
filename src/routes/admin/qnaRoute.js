@@ -1,4 +1,4 @@
-// moovy-api/src/routes/admin/authRoute.js
+// moovy-api/src/routes/admin/qnaRoute.js
 
 import { Router } from 'express'
 import { uploadQna } from '../../middlewares/upload.js'
@@ -20,14 +20,14 @@ router.use(requireAdminAuth)
 router.post('/', uploadQna.array('images', 5), validate({ body: qnaAnswerPostSchema }), adminCtrl.post)
 
 // ─────────────────────────────
+// 3) QNA 목록 가져오기
+// ─────────────────────────────
+router.get('/list', validate({ query: getListSchema }), adminCtrl.getList)
+
+// ─────────────────────────────
 // 2) 특정 QNA 가져오기
 // ─────────────────────────────
 router.get('/:qna_id', validate({ params: getQnaSchema }), ctrl.getQna)
-
-// ─────────────────────────────
-// 3) QNA 목록 가져오기
-// ─────────────────────────────
-router.get('/list', validate({ query: getListSchema }), ctrl.getList)
 
 // ─────────────────────────────
 // 4) QNA 삭제

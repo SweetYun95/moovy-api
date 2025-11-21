@@ -69,11 +69,11 @@ export const getList = async (userId, page, limit) => {
       include: [
          {
             model: QnaImage,
-            as: 'images',
+            as: 'QnaImages',
             attributes: ['img_url', 'order'],
          },
       ],
-      attributes: ['qna_id', 'q_title', 'q_contnet'],
+      attributes: ['qna_id', 'q_title', 'q_content'],
       order: [['created_at ', 'DESC']],
       limit: safeLimit,
       offset,
@@ -99,7 +99,7 @@ export const deleteQna = async (userId, qna_id, adminId = null) => {
          {
             model: QnaImage,
             as: 'QnaImages',
-            attributes: ['image_url'],
+            attributes: ['img_url'],
          },
       ],
    })
@@ -115,9 +115,9 @@ export const deleteQna = async (userId, qna_id, adminId = null) => {
    }
 
    // 1) 이미지 파일 삭제
-   if (qna.images && qna.images.length > 0) {
-      for (const img of qna.images) {
-         const filePath = path.resolve(`.${img.image_url}`)
+   if (qna.QnaImages && qna.QnaImages.length > 0) {
+      for (const img of qna.QnaImages) {
+         const filePath = path.resolve(`.${img.img_url}`)
 
          try {
             if (fs.existsSync(filePath)) {

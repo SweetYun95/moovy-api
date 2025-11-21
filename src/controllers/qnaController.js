@@ -48,7 +48,7 @@ export const deleteQna = async (req, res, next) => {
       const adminId = req.user.admin_id || null
       const { qna_id } = req.validated.params
 
-      const result = await qnaService.deleteQna(userId, qna_id)
+      const result = await qnaService.deleteQna(userId, qna_id, adminId)
       res.json(result)
    } catch (e) {
       next(e)

@@ -16,7 +16,7 @@ export const post = async (adminId, qna_id, a_title, a_content, images) => {
    qna.admin_id = adminId
    qna.a_title = a_title
    qna.a_content = a_content
-   qna.state = 'FULFIILLED'
+   qna.state = 'FULFILLED'
    await qna.save()
 
    //3. 이미지가 있다면 이미지 저장
