@@ -1,4 +1,4 @@
-// moovy-api/src/routes/reply.js
+// moovy-api/src/routes/replyRoute.js
 import express from 'express'
 import { isLoggedIn } from '../middlewares/middlewares.js'
 import * as replyCtrl from '../controllers/replyController.js'
