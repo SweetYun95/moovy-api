@@ -1,8 +1,8 @@
 // moovy-api/src/swagger.js
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
+import { swaggerPaths } from './routes_swagger/index.js'
 
-// ⚠️ Windows 경로 문제 피하려고 glob은 POSIX 경로 문자열 그대로 사용
 const options = {
    definition: {
       openapi: '3.0.0',
@@ -14,8 +14,9 @@ const options = {
          },
       },
       security: [{ bearerAuth: [] }],
+      paths: swaggerPaths,
    },
-   apis: ['src/routes_swagger/**/*.swagger.js'], // 아직 파일 없어도 OK
+   apis: [],
 }
 
 export const swaggerSpec = swaggerJSDoc(options)
