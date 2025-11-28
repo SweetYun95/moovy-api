@@ -8,6 +8,8 @@ import replyRouter from './replyRoute.js'
 import ratingRouter from './ratingRoute.js'
 import favoriteRouter from './favoriteRoute.js'
 import qnaRouter from './qnaRoute.js'
+import popularRoute from './routes/popularRoute.js'
+
 // 관리자
 import adminRouter from './admin/index.js'
 
@@ -24,6 +26,7 @@ router.use('/replies', replyRouter)
 router.use('/ratings', ratingRouter)
 router.use('/favorites', favoriteRouter)
 router.use('/qna', qnaRouter)
+app.use('/api/popular', popularRoute)
 
 // 어드민 네임스페이스
 router.use('/admin', adminRouter)
