@@ -18,7 +18,7 @@ export const localSignUp = async (req, res, next) => {
 //로컬 로그인
 export const localLogIn = async (req, res, next) => {
    req.body = req.validated?.body ?? req.body
-   passport.authenticate('local', (err, user, info) => {
+   passport.authenticate('local-user', (err, user, info) => {
       if (err) return next(err)
       if (!user) {
          const error = new Error(info?.message)
@@ -31,7 +31,7 @@ export const localLogIn = async (req, res, next) => {
          return res.json({
             success: true,
             user: {
-               id: user.id,
+               user_id: user.user_id,
                email: user.email,
                name: user.name,
             },
@@ -58,7 +58,7 @@ export const logOut = async (req, res, next) => {
    }
 }
 // 로그인 여부 확인
-export const state = async (req, res, next) => {
+export const check = async (req, res, next) => {
    try {
       if (req.isAuthenticated()) {
          return res.json({
