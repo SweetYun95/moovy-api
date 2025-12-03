@@ -56,9 +56,5 @@ export default class PopularMovieSnapshot extends Model {
          foreignKey: 'content_id',
          targetKey: 'content_id',
       })
-      db.VideoContent.hasMany(db.PopularMovieSnapshot, {
-         foreignKey: 'content_id',
-         sourceKey: 'content_id',
-      })
    }
 }
