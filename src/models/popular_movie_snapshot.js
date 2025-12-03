@@ -41,6 +41,11 @@ export default class PopularMovieSnapshot extends Model {
                   name: 'idx_snapshot_date_source_rank',
                   fields: ['snapshot_date', 'source', 'rank'],
                },
+               {
+                  name: 'uniq_snapshot_date_source_content_id',
+                  unique: true,
+                  fields: ['snapshot_date', 'source', 'content_id'],
+               },
             ],
          }
       )

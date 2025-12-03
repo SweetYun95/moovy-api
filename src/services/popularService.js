@@ -1,7 +1,6 @@
 // moovy-api/src/services/popularService.js
 import db from '../models/index.js'
 import dayjs from 'dayjs'
-import { Op } from 'sequelize'
 
 const DEFAULT_SOURCE = 'TMDB_TRENDING'
 
@@ -11,6 +10,9 @@ export const getPopularMoviesForToday = async () => {
 }
 
 export const getPopularMoviesByDate = async ({ date, source = DEFAULT_SOURCE }) => {
+   if (!date || !dayjs(date, 'YYYY-MM-DD', true).isValid()) {
+      throw new Error('Invalid or missing date parameter. Expected format: YYYY-MM-DD')
+   }
    const rows = await db.PopularMovieSnapshot.findAll({
       where: {
          snapshot_date: date,
