@@ -1,3 +1,4 @@
+// moovy-api/src/routes_swagger/qnaRouteApi.js
 export const qnaPaths = {
    '/api/qna': {
       post: {

@@ -1,3 +1,4 @@
+// moovy-api/src/routes_swagger/admin/qnaRouteApi.js
 export const adminQnaPaths = {
    '/api/admin/qna': {
       post: {

@@ -22,7 +22,11 @@ const app = express()
 app.set('port', process.env.PORT || 8000)
 
 // ───────── 공통 미들웨어
-app.use(helmet())
+app.use(
+   helmet({
+      crossOriginOpenerPolicy: false,
+   })
+)
 app.use(
    cors({
       origin: process.env.FRONTEND_APP_URL || process.env.CLIENT_URL || 'http://localhost:5173',
@@ -76,8 +80,9 @@ app.use((err, _req, res, _next) => {
 
 // ───────── DB 연결 & 동기화 (보통 server.js에서 실행하지만 여기서 처리)
 await db.sequelize.authenticate()
-await db.sequelize.sync()
-
+if (process.env.NODE_ENV === 'development') {
+   await db.sequelize.sync({ alter: false })
+}
 // ───────── 실행
 app.listen(app.get('port'), () => {
    console.log(`🚀 Moovy API on http://localhost:${app.get('port')}`)

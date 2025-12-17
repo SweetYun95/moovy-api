@@ -32,7 +32,6 @@ export default class User extends Model {
             email: {
                type: DataTypes.STRING(100),
                allowNull: false,
-               unique: true,
                validate: {
                   isEmail: true,
                },
@@ -67,6 +66,13 @@ export default class User extends Model {
             sequelize,
             modelName: 'User',
             tableName: 'users',
+            indexes: [
+               {
+                  unique: true,
+                  fields: ['email'],
+                  name: 'uniq_admin_users_email',
+               },
+            ],
             timestamps: true,
             paranoid: true,
             underscored: true,

@@ -30,10 +30,12 @@ export const localLogIn = async (req, res, next) => {
 
          return res.json({
             success: true,
-            user: {
-               user_id: user.user_id,
-               email: user.email,
-               name: user.name,
+            data: {
+               user: {
+                  user_id: user.user_id,
+                  email: user.email,
+                  name: user.name,
+               },
             },
          })
       })
@@ -81,11 +83,14 @@ export const getMe = async (req, res, next) => {
    try {
       const user = req.user
 
+      // Sequelize 인스턴스를 plain object로 변환
+      const userData = user.toJSON ? user.toJSON() : user
+
       res.json({
          success: true,
          data: {
             user: {
-               ...user,
+               ...userData,
                password: null,
             },
          },

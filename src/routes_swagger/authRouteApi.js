@@ -1,3 +1,4 @@
+// moovy-api/src/routes_swagger/authRouteApi.js
 export const authPaths = {
    '/api/auth/signup': {
       post: {

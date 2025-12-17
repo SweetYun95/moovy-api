@@ -14,7 +14,6 @@ export default class AdminUser extends Model {
             email: {
                type: DataTypes.STRING(100),
                allowNull: false,
-               unique: true,
             },
             password: {
                type: DataTypes.STRING(255),
@@ -34,6 +33,13 @@ export default class AdminUser extends Model {
             sequelize,
             modelName: 'AdminUser',
             tableName: 'admin_users',
+            indexes: [
+               {
+                  unique: true,
+                  fields: ['email'],
+                  name: 'uniq_admin_users_email',
+               },
+            ],
             timestamps: true,
             paranoid: true,
             underscored: true,

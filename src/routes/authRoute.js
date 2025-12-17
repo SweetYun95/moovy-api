@@ -31,7 +31,7 @@ router.get(
       failureRedirect: `${process.env.FRONTEND_APP_URL}/login`, // 프론트엔드 로그인 페이지
    }),
    (req, res) => {
-      res.redirect(process.env.FRONTEND_APP_URL) // 프론트엔드 메인 페이지
+      res.redirect(`${process.env.FRONTEND_APP_URL}/oauth/success`) // 프론트엔드 성공 페이지
    }
 )
 
@@ -52,7 +52,7 @@ router.get(
    }),
    (req, res) => {
       // 로그인 성공 - 프론트엔드로 리다이렉트
-      res.redirect(process.env.FRONTEND_APP_URL)
+      res.redirect(`${process.env.FRONTEND_APP_URL}/oauth/success`)
    }
 )
 
