@@ -1,3 +1,4 @@
+// moovy-api/src/routes_swagger/admin/authRouteApi.js
 export const adminAuthPaths = {
    '/api/admin/auth/signup': {
       post: {
