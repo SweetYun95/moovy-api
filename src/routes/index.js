@@ -3,12 +3,14 @@ import { Router } from 'express'
 
 // 퍼블릭(유저)
 import authRouter from './authRoute.js'
-import commentRouter from './comment.js'
-import replyRouter from './reply.js'
+import commentRouter from './commentRoute.js'
+import replyRouter from './replyRoute.js'
 import ratingRouter from './ratingRoute.js'
 import favoriteRouter from './favoriteRoute.js'
 import qnaRouter from './qnaRoute.js'
 import userRouter from './userRoute.js'
+import popularRoute from './popularRoute.js'
+
 // 관리자
 import adminRouter from './admin/index.js'
 
@@ -26,6 +28,7 @@ router.use('/ratings', ratingRouter)
 router.use('/favorites', favoriteRouter)
 router.use('/qna', qnaRouter)
 router.use('/user', userRouter)
+router.use('/popular', popularRoute)
 
 // 어드민 네임스페이스
 router.use('/admin', adminRouter)

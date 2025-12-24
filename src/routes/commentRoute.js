@@ -1,4 +1,4 @@
-// moovy-api/src/routes/comment.js
+// moovy-api/src/routes/commentRoute.js
 import express from 'express'
 import { isLoggedIn } from '../middlewares/middlewares.js'
 import * as commentCtrl from '../controllers/commentController.js'
