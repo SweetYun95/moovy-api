@@ -6,7 +6,7 @@ import { validate } from '../validations/validators/validate.js'
 import { userEditSchema } from '../validations/schemas/userSchema.js'
 import { uploadUserProfile } from '../middlewares/upload.js'
 
-const router = Router()
+const router = express.Router()
 
 // ─────────────────────────────
 // 사용자 정보 조회

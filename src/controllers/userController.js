@@ -1,5 +1,6 @@
 // moovy-api/src/controllers/userController.js
 
+import fs from 'fs/promises'
 import * as userService from '../services/userService.js'
 import { getMe, withdraw } from './authController.js'
 
@@ -17,7 +18,11 @@ export async function updateUserProfile(req, res, next) {
    try {
       const userId = req.user.user_id
       const { name, email } = req.validated.body
-      const updatedUser = await userService.updateUserProfile(userId, { name, email })
+      const payload = {}
+      if (name !== undefined) payload.name = name
+      if (email !== undefined) payload.email = email
+
+      const updatedUser = await userService.updateUserProfile(userId, payload)
       res.json({ success: true, data: updatedUser })
    } catch (error) {
       next(error)

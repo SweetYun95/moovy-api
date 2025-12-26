@@ -1,21 +1,28 @@
 // moovy-api/src/services/userService.js
 import db from '../models/index.js'
-
+import fs from 'fs/promises'
 // ─────────────────────────────────────────
 // 사용자 정보 수정 서비스
 // ─────────────────────────────────────────
-export async function updateUserProfile(userId, { name, email }) {
-   const [updatedRowsCount, [updatedUser]] = await db.User.update(
-      { name, email },
-      {
-         where: { user_id: userId },
-         returning: true,
-      }
-   )
+export async function updateUserProfile(userId, payload) {
+   if (Object.keys(payload).length === 0) {
+      throw new Error('수정할 값이 없습니다.')
+   }
+
+   const [updatedRowsCount, [updatedUser]] = await db.User.update(payload, {
+      where: { user_id: userId },
+      returning: true,
+   })
    if (updatedRowsCount === 0) {
       throw new Error('User not found or no changes made')
    }
-   return updatedUser
+   const userData = updatedUser.toJSON ? updatedUser.toJSON() : updatedUser
+
+   return {
+      user_id: userData.user_id,
+      name: userData.name,
+      email: userData.email,
+   }
 }
 
 // ─────────────────────────────────────────
@@ -42,8 +49,13 @@ export async function updateProfileImage(userId, imagePath) {
          console.log('Failed to delete old profile image:', err)
       })
    }
+   const userData = user.toJSON ? user.toJSON() : user
 
-   return updatedUser
+   return {
+      user_id: userData.user_id,
+      name: userData.name,
+      email: userData.email,
+   }
 }
 
 // ─────────────────────────────────────────
