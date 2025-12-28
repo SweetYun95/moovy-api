@@ -25,6 +25,9 @@ import UserSanction from './user_sanction.js'
 import VideoContent from './video_content.js'
 import VideoContentImage from './video_content_image.js'
 
+// ✅ 신규 추가: 비밀번호 재설정 토큰
+import PasswordResetToken from './password_reset_token.js'
+
 dotenv.config()
 const env = process.env.NODE_ENV || 'development'
 const config = cfg[env]
@@ -57,6 +60,9 @@ const db = {
    UserSanction,
    VideoContent,
    VideoContentImage,
+
+   // ✅ 신규 모델 등록
+   PasswordResetToken,
 }
 
 // --- Initialize all models ---
