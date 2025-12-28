@@ -8,6 +8,10 @@ const uploadPath = 'uploads/qna'
 if (!fs.existsSync(uploadPath)) {
    fs.mkdirSync(uploadPath, { recursive: true })
 }
+const userUploadPath = 'uploads/user'
+if (!fs.existsSync(userUploadPath)) {
+   fs.mkdirSync(userUploadPath, { recursive: true })
+}
 
 const storage = multer.diskStorage({
    destination(req, file, done) {
@@ -33,5 +37,20 @@ const fileFilter = (req, file, cb) => {
 export const uploadQna = multer({
    storage,
    limits: { files: 5, fileSize: 5 * 1024 * 1024 }, // 최대 5개, 파일당 최대 5MB
+   fileFilter,
+})
+
+export const uploadUserProfile = multer({
+   storage: multer.diskStorage({
+      destination(req, file, done) {
+         done(null, userUploadPath)
+      },
+      filename(req, file, done) {
+         const ext = path.extname(file.originalname)
+         const basename = path.basename(file.originalname, ext)
+         done(null, `${basename}-profile-${Date.now()}${ext}`)
+      },
+   }),
+   limits: { files: 1, fileSize: 2 * 1024 * 1024 }, // 최대 1개, 파일당 최대 2MB
    fileFilter,
 })
