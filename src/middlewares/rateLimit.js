@@ -7,5 +7,5 @@ export const passwordResetLimiter = rateLimit({
    max: 5, // IP당 5회
    standardHeaders: true,
    legacyHeaders: false,
-   message: { message: '요청이 너무 많습니다. 잠xin 후 다시 시도하세요.' },
+   message: { message: '요청이 너무 많습니다. 잠시 후 다시 시도하세요.' },
 })
