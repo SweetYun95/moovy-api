@@ -175,6 +175,151 @@ export const authPaths = {
       },
    },
 
+   // ✅ 추가: 비밀번호 재설정 요청(메일 발송)
+   '/api/auth/password/reset-request': {
+      post: {
+         tags: ['Auth'],
+         summary: '비밀번호 재설정 요청(메일 발송)',
+         description: '이메일로 비밀번호 재설정 링크를 전송합니다. 보안상 가입 여부와 무관하게 동일한 응답을 반환할 수 있습니다. (레이트리밋 적용)',
+         security: [],
+         requestBody: {
+            required: true,
+            content: {
+               'application/json': {
+                  schema: {
+                     type: 'object',
+                     required: ['email'],
+                     properties: {
+                        email: {
+                           type: 'string',
+                           format: 'email',
+                           description: '가입 이메일',
+                           example: 'user@example.com',
+                        },
+                     },
+                  },
+               },
+            },
+         },
+         responses: {
+            200: {
+               description: '요청 처리 성공(메일 발송 시도)',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           message: {
+                              type: 'string',
+                              example: '비밀번호 재설정 메일을 전송했습니다.',
+                           },
+                        },
+                     },
+                  },
+               },
+            },
+            400: {
+               description: '잘못된 요청(유효성 검사 실패)',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           message: { type: 'string', example: 'VALIDATION_ERROR' },
+                           errors: { type: 'object' },
+                        },
+                     },
+                  },
+               },
+            },
+            429: {
+               description: '요청 과다(레이트 리밋)',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           message: {
+                              type: 'string',
+                              example: '요청이 너무 많습니다. 잠시 후 다시 시도하세요.',
+                           },
+                        },
+                     },
+                  },
+               },
+            },
+         },
+      },
+   },
+
+   // ✅ 추가: 비밀번호 재설정 확정(토큰 + 새 비밀번호)
+   '/api/auth/password/reset': {
+      post: {
+         tags: ['Auth'],
+         summary: '비밀번호 재설정 확정',
+         description: '메일로 받은 토큰과 새 비밀번호를 전달해 비밀번호를 재설정합니다. 토큰이 만료/사용됨/위조된 경우 실패합니다.',
+         security: [],
+         requestBody: {
+            required: true,
+            content: {
+               'application/json': {
+                  schema: {
+                     type: 'object',
+                     required: ['token', 'password'],
+                     properties: {
+                        token: {
+                           type: 'string',
+                           description: '메일 링크에 포함된 재설정 토큰(원본)',
+                           example: '3c9d...ff12',
+                        },
+                        password: {
+                           type: 'string',
+                           format: 'password',
+                           minLength: 8,
+                           maxLength: 72,
+                           description: '비밀번호는 8~72자이며, 대문자/소문자/숫자를 각각 하나 이상 포함',
+                           example: 'Password123',
+                        },
+                     },
+                  },
+               },
+            },
+         },
+         responses: {
+            200: {
+               description: '비밀번호 재설정 성공',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           message: { type: 'string', example: '비밀번호가 재설정되었습니다.' },
+                        },
+                     },
+                  },
+               },
+            },
+            400: {
+               description: '토큰 오류/만료/사용됨 또는 유효성 검사 실패',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           message: {
+                              type: 'string',
+                              example: 'RESET_TOKEN_INVALID_OR_EXPIRED',
+                           },
+                           errors: { type: 'object' },
+                        },
+                     },
+                  },
+               },
+            },
+         },
+      },
+   },
+
    '/api/auth/kakao': {
       get: {
          tags: ['Auth'],
