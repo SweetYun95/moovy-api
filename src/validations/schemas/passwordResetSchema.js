@@ -2,7 +2,7 @@
 import { z } from 'zod'
 
 export const passwordResetRequestSchema = z.object({
-   email: z.email({ message: '유효한 이메일 형식이 아닙니다.' }),
+    email: z.string().email({ message: '유효한 이메일 형식이 아닙니다.' }),
 })
 
 export const passwordResetConfirmSchema = z.object({
