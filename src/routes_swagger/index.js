@@ -3,6 +3,8 @@
  * tags:
  *   - name: Auth
  *     description: 인증 관련 API
+ *   - name: User
+ *     description: 사용자 관련 API
  *   - name: QnA
  *     description: QnA 관련 API
  *   - name: Admin Auth
@@ -13,6 +15,8 @@
 
 // Auth API 문서 import
 import { authPaths } from './authRouteApi.js'
+// User API 문서 import
+import { userPaths } from './userRouteApi.js'
 // QnA API 문서 import
 import { qnaPaths } from './qnaRouteApi.js'
 // Admin Auth API 문서 import
@@ -22,6 +26,7 @@ import { adminQnaPaths } from './admin/qnaRouteApi.js'
 
 export const swaggerPaths = {
    ...authPaths,
+   ...userPaths,
    ...qnaPaths,
    ...adminAuthPaths,
    ...adminQnaPaths,
