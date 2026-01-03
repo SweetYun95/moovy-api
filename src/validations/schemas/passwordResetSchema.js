@@ -6,7 +6,7 @@ export const passwordResetRequestSchema = z.object({
 })
 
 export const passwordResetConfirmSchema = z.object({
-   token: z.string({ invalid_type_error: '토큰 형식이 잘못되었습니다.' }).min(10, '토큰이 올바르지 않습니다.'), // 너무 짧으면 컷
+   token: z.string({ invalid_type_error: '토큰 형식이 잘못되었습니다.' }).min(64, '토큰이 올바르지 않습니다.'), // 너무 짧으면 컷
 
    password: z
       .string({ invalid_type_error: '비밀번호 형식이 잘못되었습니다.' })
