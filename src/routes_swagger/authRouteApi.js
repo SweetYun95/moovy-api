@@ -308,7 +308,7 @@ export const authPaths = {
                         properties: {
                            message: {
                               type: 'string',
-                              example: 'RESET_TOKEN_INVALID_OR_EXPIRED 또는 VALIDATION_ERROR',
+                              example: 'RESET_TOKEN_INVALID_OR_EXPIRED',
                            },
                            errors: { type: 'object' },
                         },
