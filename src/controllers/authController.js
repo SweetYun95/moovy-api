@@ -123,3 +123,14 @@ export const withdraw = async (req, res, next) => {
       next(e)
    }
 }
+
+//이메일 중복확인
+export const checkEmail = async (req, res, next) => {
+   try {
+      const { email } = req.validated.body
+      const result = await svc.checkEmail(email)
+      res.json(result)
+   } catch (e) {
+      next(e)
+   }
+}

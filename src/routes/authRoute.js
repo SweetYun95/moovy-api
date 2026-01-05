@@ -81,4 +81,9 @@ router.delete('/disconnect/:provide', isLoggedIn, validate({ params: providePara
 // ─────────────────────────────
 router.delete('/withdraw', isLoggedIn, ctrl.withdraw)
 
+// ─────────────────────────────
+// 이메일 중복확인
+// ─────────────────────────────
+router.post('/check-email', validate({ body: checkEmailSchema }), ctrl.checkEmail)
+
 export default router

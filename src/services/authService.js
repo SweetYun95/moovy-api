@@ -110,3 +110,17 @@ export const withdraw = async (userId) => {
       throw e
    }
 }
+
+//이메일 중복확인
+export const checkEmail = async (email) => {
+   try {
+      const exUser = await User.findOne({ where: { email } })
+      if (exUser) {
+         return { success: true, isDuplicate: true }
+      } else {
+         return { success: true, isDuplicate: false }
+      }
+   } catch (e) {
+      throw e
+   }
+}

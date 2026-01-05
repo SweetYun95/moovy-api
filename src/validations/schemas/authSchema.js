@@ -50,3 +50,7 @@ export const provideParamSchema = z.object({
       invalid_type_error: '유효하지 않은 소셜 제공자입니다.',
    }),
 })
+
+export const checkEmailSchema = z.object({
+   email: z.email({ message: '유효한 이메일 형식이 아닙니다.' }),
+})
