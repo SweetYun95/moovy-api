@@ -1,4 +1,4 @@
-// moovy-api/src/controllers/favorite.controller.js
+// moovy-api/src/controllers/favoriteController.js
 import * as svc from '../services/favoriteService.js'
 import { normalizePagination } from '../validations/dto/commonDto.js'
 import { normalizeContentId } from '../validations/dto/favoriteDto.js'

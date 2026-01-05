@@ -147,6 +147,10 @@ export default class User extends Model {
          sourceKey: 'user_id',
          as: 'reported',
       })
+      User.hasMany(db.PasswordResetToken, {
+         foreignKey: 'user_id',
+         sourceKey: 'user_id',
+      })
    }
    isLocked() {
       return !!(this.lockUntil && this.lockUntil > Date.now())
