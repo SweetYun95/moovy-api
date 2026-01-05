@@ -4,7 +4,7 @@ import passport from 'passport'
 
 import { validate } from '../validations/validators/validate.js'
 import * as ctrl from '../controllers/authController.js'
-import { loginSchema, provideParamSchema, signUpSchema } from '../validations/schemas/authSchema.js'
+import { loginSchema, provideParamSchema, signUpSchema, checkEmailSchema } from '../validations/schemas/authSchema.js'
 import { isLoggedIn, isNotLoggedIn } from '../middlewares/middlewares.js'
 
 const router = Router()
