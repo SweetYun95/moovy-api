@@ -667,4 +667,69 @@ export const authPaths = {
          },
       },
    },
+
+   '/api/auth/check-email': {
+      post: {
+         tags: ['Auth'],
+         summary: '이메일 중복 확인',
+         description: '회원가입 시 이메일 중복 여부를 확인합니다.',
+         security: [],
+         requestBody: {
+            required: true,
+            content: {
+               'application/json': {
+                  schema: {
+                     type: 'object',
+                     required: ['email'],
+                     properties: {
+                        email: {
+                           type: 'string',
+                           format: 'email',
+                           description: '중복 확인할 이메일',
+                           example: 'user@example.com',
+                        },
+                     },
+                  },
+               },
+            },
+         },
+         responses: {
+            200: {
+               description: '확인 성공',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           success: { type: 'boolean', example: true },
+                           isDuplicate: {
+                              type: 'boolean',
+                              description: '중복 여부 (true: 중복, false: 사용 가능)',
+                              example: false,
+                           },
+                        },
+                     },
+                  },
+               },
+            },
+            400: {
+               description: '잘못된 요청 (유효성 검사 실패)',
+               content: {
+                  'application/json': {
+                     schema: {
+                        type: 'object',
+                        properties: {
+                           message: {
+                              type: 'string',
+                              example: 'VALIDATION_ERROR',
+                           },
+                           errors: { type: 'object' },
+                        },
+                     },
+                  },
+               },
+            },
+         },
+      },
+   },
 }
