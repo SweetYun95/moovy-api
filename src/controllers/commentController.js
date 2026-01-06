@@ -1,5 +1,7 @@
 // moovy-api/src/controllers/commentController.js
 import db from '../models/index.js'
+import { normalizePagination } from '../validations/dto/commonDto.js'
+
 const { CommentTbl, User, Topic } = db
 
 // 코멘트 작성
@@ -26,17 +28,27 @@ export const createComment = async (req, res) => {
    }
 }
 
-// 코멘트 조회 (토픽 기준)
+// 코멘트 조회 (토픽 기준) - 무한 스크롤용 pagination 적용
 export const getCommentsByTopic = async (req, res) => {
    try {
       const { topic_id } = req.params
+
+      // ✅ 무한 스크롤: page/limit 기반 chunk fetch
+      const { limit, offset } = normalizePagination(req.query)
+
+      // (선택) 작성과 동일하게, 존재하지 않는 토픽이면 404로 명확히
+      const topic = await Topic.findByPk(topic_id)
+      if (!topic) return res.status(404).json({ message: '존재하지 않는 토픽입니다.' })
 
       const comments = await CommentTbl.findAll({
          where: { topic_id },
          include: [{ model: User, attributes: ['user_id', 'name'] }],
          order: [['created_at', 'DESC']],
+         limit,
+         offset,
       })
 
+      // ✅ 응답은 기존과 동일하게 배열만 반환(프론트 영향 최소)
       return res.json(comments)
    } catch (err) {
       res.status(500).json({ message: '코멘트 조회 실패', error: err.message })
@@ -49,6 +61,9 @@ export const updateComment = async (req, res) => {
       const { comment_id } = req.params
       const { content } = req.body
       const user_id = req.user.user_id
+
+      // content가 비어있으면 의미 없는 수정이므로 400 처리(안전장치)
+      if (!content) return res.status(400).json({ message: 'content는 필수입니다.' })
 
       const comment = await CommentTbl.findByPk(comment_id)
       if (!comment) return res.status(404).json({ message: '코멘트가 존재하지 않습니다.' })

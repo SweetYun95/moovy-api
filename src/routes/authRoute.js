@@ -2,39 +2,39 @@
 import { Router } from "express";
 import passport from "passport";
 
-import { validate } from "../validations/validators/validate.js";
-import * as ctrl from "../controllers/authController.js";
-import {
-  loginSchema,
-  provideParamSchema,
-  signUpSchema,
-} from "../validations/schemas/authSchema.js";
-import { isLoggedIn, isNotLoggedIn } from "../middlewares/middlewares.js";
+import { validate } from '../validations/validators/validate.js'
+import * as ctrl from '../controllers/authController.js'
+import { loginSchema, provideParamSchema, signUpSchema } from '../validations/schemas/authSchema.js'
+import { isLoggedIn, isNotLoggedIn } from '../middlewares/middlewares.js'
+
+// ✅ 추가: 비밀번호 재설정 validation + rate limit
+import { passwordResetLimiter } from '../middlewares/rateLimit.js'
+import { passwordResetRequestSchema, passwordResetConfirmSchema } from '../validations/schemas/passwordResetSchema.js'
 
 const router = Router();
 
 // ─────────────────────────────
-//로컬 로그인/회원가입
+// 로컬 로그인/회원가입
 // ─────────────────────────────
 
-//회원가입
-router.post(
-  "/register",
-  // isNotLoggedIn,
-  // validate({ body: signUpSchema }),
-  ctrl.localSignUp
-);
+// 회원가입
+router.post('/signup', isNotLoggedIn, validate({ body: signUpSchema }), ctrl.localSignUp)
 
-//로그인
-router.post(
-  "/login",
-  isNotLoggedIn,
-  validate({ body: loginSchema }),
-  ctrl.localLogIn
-);
+// 로그인
+router.post('/login', isNotLoggedIn, validate({ body: loginSchema }), ctrl.localLogIn)
 
 // ─────────────────────────────
-//카카오 로그인/회원가입
+// 비밀번호 재설정 (로그인 불필요)
+// ─────────────────────────────
+
+// 비밀번호 재설정 요청(메일 발송)
+router.post('/password/reset-request', passwordResetLimiter, validate({ body: passwordResetRequestSchema }), ctrl.passwordResetRequest)
+
+// 비밀번호 재설정 확정(토큰 + 새 비번)
+router.post('/password/reset', validate({ body: passwordResetConfirmSchema }), ctrl.passwordResetConfirm)
+
+// ─────────────────────────────
+// 카카오 로그인/회원가입
 // ─────────────────────────────
 
 router.get("/kakao", passport.authenticate("kakao"));
@@ -50,7 +50,7 @@ router.get(
 );
 
 // ─────────────────────────────
-//구글 로그인/회원가입
+// 구글 로그인/회원가입
 // ─────────────────────────────
 router.get(
   "/google",
