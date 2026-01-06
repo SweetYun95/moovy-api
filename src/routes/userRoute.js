@@ -3,7 +3,7 @@ import express from 'express'
 import { isLoggedIn } from '../middlewares/middlewares.js'
 import * as userCtrl from '../controllers/userController.js'
 import { validate } from '../validations/validators/validate.js'
-import { userEditSchema } from '../validations/schemas/userSchema.js'
+import { checkNicknameSchema, userEditSchema } from '../validations/schemas/userSchema.js'
 import { uploadUserProfile } from '../middlewares/upload.js'
 
 const router = express.Router()
@@ -26,7 +26,7 @@ router.put('/profile/image', isLoggedIn, uploadUserProfile.single('image'), user
 // ─────────────────────────────
 // 닉네임 중복 확인
 // ─────────────────────────────
-router.post('/check-nickname', validate({ body: userEditSchema }), userCtrl.checkNickname)
+router.post('/check-nickname', validate({ body: checkNicknameSchema }), userCtrl.checkNickname)
 
 // ─────────────────────────────
 // 회원 탈퇴
