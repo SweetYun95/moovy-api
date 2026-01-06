@@ -128,11 +128,22 @@ export const socialDisconnect = async (req, res, next) => {
 
 //회원 탈퇴
 export const withdraw = async (req, res, next) => {
-  try {
-    const userId = req.user.user_id;
-    const result = await svc.withdraw(userId);
-    res.json(result);
-  } catch (e) {
-    next(e);
-  }
-};
+   try {
+      const userId = req.user.user_id
+      const result = await svc.withdraw(userId)
+      res.json(result)
+   } catch (e) {
+      next(e)
+   }
+}
+
+//이메일 중복확인
+export const checkEmail = async (req, res, next) => {
+   try {
+      const { email } = req.validated.body
+      const result = await svc.checkEmail(email)
+      res.json(result)
+   } catch (e) {
+      next(e)
+   }
+}

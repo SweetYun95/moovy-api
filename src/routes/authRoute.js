@@ -4,7 +4,7 @@ import passport from "passport";
 
 import { validate } from '../validations/validators/validate.js'
 import * as ctrl from '../controllers/authController.js'
-import { loginSchema, provideParamSchema, signUpSchema } from '../validations/schemas/authSchema.js'
+import { loginSchema, provideParamSchema, signUpSchema, checkEmailSchema } from '../validations/schemas/authSchema.js'
 import { isLoggedIn, isNotLoggedIn } from '../middlewares/middlewares.js'
 
 // ✅ 추가: 비밀번호 재설정 validation + rate limit
@@ -100,4 +100,9 @@ router.delete(
 // ─────────────────────────────
 router.delete("/withdraw", isLoggedIn, ctrl.withdraw);
 
-export default router;
+// ─────────────────────────────
+// 이메일 중복확인
+// ─────────────────────────────
+router.post('/check-email', validate({ body: checkEmailSchema }), ctrl.checkEmail)
+
+export default router

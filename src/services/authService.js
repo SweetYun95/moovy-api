@@ -112,11 +112,17 @@ export const withdraw = async (userId) => {
       throw err;
     }
 
-    await user.destroy({ transaction });
-    transaction.commit();
-    return { success: true };
-  } catch (e) {
-    transaction.rollback();
-    throw e;
-  }
-};
+      await user.destroy({ transaction })
+      transaction.commit()
+      return { success: true }
+   } catch (e) {
+      transaction.rollback()
+      throw e
+   }
+}
+
+//이메일 중복확인
+export const checkEmail = async (email) => {
+   const exUser = await User.findOne({ where: { email } })
+   return { success: true, isDuplicate: !!exUser }
+}
