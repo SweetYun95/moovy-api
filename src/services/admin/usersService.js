@@ -28,7 +28,45 @@ export async function listUsers({ page = 1, size = 20, search = '', state, provi
       order: [[sort, order]],
       offset: (page - 1) * size,
       limit: size,
-      attributes: ['user_id', 'email', 'name', 'state', 'google', 'kakao', 'created_at', 'updated_at', 'deleted_at'],
+      attributes: [
+         'user_id',
+         'email',
+         'name',
+         'state',
+         'profile_img',
+         'google',
+         'kakao',
+         'created_at',
+         'updated_at',
+         'deleted_at',
+         [
+            db.sequelize.literal(`(
+               SELECT COUNT(*)
+               FROM comment_tbls AS c
+               WHERE c.user_id = User.user_id
+                 AND c.deleted_at IS NULL
+            )`),
+            'comment_count',
+         ],
+         [
+            db.sequelize.literal(`(
+               SELECT COUNT(*)
+               FROM comment_replies AS r
+               WHERE r.user_id = User.user_id
+                 AND r.deleted_at IS NULL
+            )`),
+            'reply_count',
+         ],
+         [
+            db.sequelize.literal(`(
+               SELECT COUNT(*)
+               FROM user_sanctions AS s
+               WHERE s.user_id = User.user_id
+                 AND s.deleted_at IS NULL
+            )`),
+            'sanction_count',
+         ],
+      ],
       paranoid: false,
    })
 
@@ -39,6 +77,26 @@ export async function listUsers({ page = 1, size = 20, search = '', state, provi
       total: count,
       totalPages: Math.ceil(count / size),
    }
+}
+
+async function resolveAdminId(admin_id, t) {
+   const isValidNumber = (v) => typeof v === 'number' || (typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v)))
+   const candidate = isValidNumber(admin_id) ? Number(admin_id) : null
+
+   if (candidate != null) {
+      const exists = await db.AdminUser.findByPk(candidate, { transaction: t, paranoid: false })
+      if (exists) return candidate
+   }
+
+   const first = await db.AdminUser.findOne({
+      attributes: ['admin_id'],
+      order: [['admin_id', 'ASC']],
+      transaction: t,
+      paranoid: false,
+   })
+
+   if (first?.admin_id) return first.admin_id
+   throw httpError(500, '관리자 계정이 없어 제재를 생성할 수 없습니다. admin_users를 시드하거나 DEV_ADMIN_ID를 설정하세요.')
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -64,6 +122,8 @@ export async function getUserDetail(user_id) {
 // 제재 생성
 export async function createSanction({ user_id, admin_id, start_at, end_at, reason }) {
    return db.sequelize.transaction(async (t) => {
+      const resolvedAdminId = await resolveAdminId(admin_id, t)
+
       const user = await db.User.findByPk(user_id, {
          transaction: t,
          paranoid: false,
@@ -76,7 +136,7 @@ export async function createSanction({ user_id, admin_id, start_at, end_at, reas
       const end = new Date(end_at)
       if (end <= start) throw httpError(400, '제재 종료일은 시작일 이후여야 합니다.')
 
-      const sanction = await db.UserSanction.create({ user_id, admin_id, start_at: start, end_at: end, reason }, { transaction: t })
+      const sanction = await db.UserSanction.create({ user_id, admin_id: resolvedAdminId, start_at: start, end_at: end, reason }, { transaction: t })
 
       await user.update({ state: USER_STATE.SUSPENDED }, { transaction: t })
       return sanction
@@ -142,6 +202,8 @@ export async function forceWithdrawal({ user_id, admin_id, reason, confirm }) {
    if (!confirm) throw httpError(400, '강제 탈퇴를 진행하려면 confirm 값이 필요합니다.')
 
    return db.sequelize.transaction(async (t) => {
+      const resolvedAdminId = await resolveAdminId(admin_id, t)
+
       const user = await db.User.findByPk(user_id, {
          transaction: t,
          paranoid: false,
@@ -153,7 +215,7 @@ export async function forceWithdrawal({ user_id, admin_id, reason, confirm }) {
       await db.UserSanction.create(
          {
             user_id,
-            admin_id,
+            admin_id: resolvedAdminId,
             start_at: new Date(),
             end_at: new Date(),
             reason: `[FORCE_WITHDRAWAL] ${reason}`,
@@ -164,6 +226,88 @@ export async function forceWithdrawal({ user_id, admin_id, reason, confirm }) {
       await user.update({ state: USER_STATE.DELETED }, { transaction: t })
       await user.destroy({ transaction: t }) // paranoid=true면 deleted_at만 세팅
       return true
+   })
+}
+
+// ──────────────────────────────────────────────────────────────
+// 관리자: 사용자 프로필(닉네임/이메일-변경불가) 수정
+export async function updateUserProfileByAdmin({ user_id, name, email }) {
+   return db.sequelize.transaction(async (t) => {
+      const user = await db.User.findByPk(user_id, {
+         transaction: t,
+         paranoid: false,
+         lock: t.LOCK.UPDATE,
+      })
+      if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
+      if (user.state === USER_STATE.DELETED) throw httpError(400, '탈퇴 처리된 사용자는 수정할 수 없습니다.')
+
+      if (email != null && email !== user.email) {
+         throw httpError(400, '이메일은 수정할 수 없습니다.')
+      }
+
+      const patch = {}
+      if (name != null) patch.name = name
+
+      if (Object.keys(patch).length > 0) {
+         await user.update(patch, { transaction: t })
+      }
+
+      const data = user.toJSON ? user.toJSON() : user
+      return {
+         user_id: data.user_id,
+         name: data.name,
+         email: data.email,
+         profile_img: data.profile_img,
+         state: data.state,
+      }
+   })
+}
+
+// ──────────────────────────────────────────────────────────────
+// 관리자: 사용자 프로필 이미지 업로드
+export async function updateUserProfileImageByAdmin({ user_id, imagePath }) {
+   return db.sequelize.transaction(async (t) => {
+      const user = await db.User.findByPk(user_id, {
+         transaction: t,
+         paranoid: false,
+         lock: t.LOCK.UPDATE,
+      })
+      if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
+      if (user.state === USER_STATE.DELETED) throw httpError(400, '탈퇴 처리된 사용자는 수정할 수 없습니다.')
+
+      await user.update({ profile_img: imagePath }, { transaction: t })
+      const data = user.toJSON ? user.toJSON() : user
+      return {
+         user_id: data.user_id,
+         name: data.name,
+         email: data.email,
+         profile_img: data.profile_img,
+         state: data.state,
+      }
+   })
+}
+
+// ──────────────────────────────────────────────────────────────
+// 관리자: 사용자 프로필 이미지 기본값(삭제)
+export async function resetUserProfileImageByAdmin({ user_id }) {
+   return db.sequelize.transaction(async (t) => {
+      const user = await db.User.findByPk(user_id, {
+         transaction: t,
+         paranoid: false,
+         lock: t.LOCK.UPDATE,
+      })
+      if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
+      if (user.state === USER_STATE.DELETED) throw httpError(400, '탈퇴 처리된 사용자는 수정할 수 없습니다.')
+
+      await user.update({ profile_img: null }, { transaction: t })
+      const data = user.toJSON ? user.toJSON() : user
+      return {
+         user_id: data.user_id,
+         name: data.name,
+         email: data.email,
+         profile_img: data.profile_img,
+         state: data.state,
+      }
    })
 }
 

@@ -5,6 +5,41 @@ import { parseBearer, toUnifiedUser, getExistingUser } from '../utils/authUtils.
 
 dotenv.config()
 
+function isDevBypassEnabled() {
+   return String(process.env.NODE_ENV || '').toLowerCase() === 'development'
+}
+
+function ensureDevUser(req, kind = 'user') {
+   if (!req) return
+   const pre = getExistingUser(req)
+   if (pre) {
+      if (!req.user) req.user = pre
+      if (!req.authUser) req.authUser = pre
+      return
+   }
+
+   const u =
+      kind === 'admin'
+         ? {
+              id: 1,
+              user_id: 1,
+              admin_id: 1,
+              role: 'SUPERADMIN',
+              name: 'dev-admin',
+              email: 'dev-admin@local',
+           }
+         : {
+              id: 1,
+              user_id: 1,
+              role: 'USER',
+              name: 'dev-user',
+              email: 'dev-user@local',
+           }
+
+   req.user = u
+   req.authUser = u
+}
+
 /**
  * requireAuth
  * - 인증 필수: (1) 세션/패스포트 or (2) 선행 토큰 주입 or (3) 여기서 JWT 검증
@@ -13,6 +48,11 @@ dotenv.config()
  */
 export function requireAuth(req, res, next) {
    try {
+      if (isDevBypassEnabled()) {
+         ensureDevUser(req, 'user')
+         return next()
+      }
+
       // 1) 세션/선행 주입 확인
       const pre = getExistingUser(req)
       if (pre) {
@@ -50,6 +90,12 @@ export function requireAuth(req, res, next) {
  */
 export function optionalAuth(req, _res, next) {
    try {
+      if (isDevBypassEnabled()) {
+         // 공개 라우트는 인증 없어도 되지만, 개발 편의상 컨텍스트가 필요한 경우를 대비해 주입
+         ensureDevUser(req, 'user')
+         return next()
+      }
+
       const pre = getExistingUser(req)
       if (pre) {
          if (!req.user) req.user = pre

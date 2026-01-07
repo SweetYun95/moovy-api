@@ -36,10 +36,10 @@ export async function updateProfileImage(userId, imagePath) {
    }
 
    //2. 기존 이미지 경로
-   const oldImagePath = user.profile_image
+   const oldImagePath = user.profile_img
 
    //3. DB 업데이트
-   user.profile_image = imagePath
+   user.profile_img = imagePath
    await user.save()
 
    //4. 기존 이미지 파일 삭제 (기본 이미지가 아닐 경우)

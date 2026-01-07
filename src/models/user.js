@@ -90,6 +90,7 @@ export default class User extends Model {
       User.hasMany(db.UserSanction, {
          foreignKey: 'user_id',
          sourceKey: 'user_id',
+         as: 'sanctions',
       })
       User.hasOne(db.UserDetail, {
          foreignKey: 'user_id',
