@@ -1,7 +1,7 @@
 // moovy-api/src/models/index.js
-import dotenv from 'dotenv'
-import { Sequelize } from 'sequelize'
-import cfg from '../config/config.js'
+import dotenv from "dotenv";
+import { Sequelize } from "sequelize";
+import cfg from "../config/config.js";
 
 // 각 모델 (기본 포맷)
 import AdminUser from './admin_user.js'
@@ -28,14 +28,19 @@ import VideoContentImage from './video_content_image.js'
 // ✅ 신규 추가: 비밀번호 재설정 토큰
 import PasswordResetToken from './password_reset_token.js'
 
-dotenv.config()
-const env = process.env.NODE_ENV || 'development'
-const config = cfg[env]
+dotenv.config();
+const env = process.env.NODE_ENV || "development";
+const config = cfg[env];
 
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-   ...config,
-   // logging: false, // ✅ SQL 로그 출력 끄기
-})
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  {
+    ...config,
+    // logging: false, // ✅ SQL 로그 출력 끄기
+  }
+);
 
 const db = {
    sequelize,
@@ -67,13 +72,13 @@ const db = {
 
 // --- Initialize all models ---
 Object.values(db)
-   .filter((model) => typeof model.init === 'function')
-   .forEach((model) => model.init(sequelize))
+  .filter((model) => typeof model.init === "function")
+  .forEach((model) => model.init(sequelize));
 
 // --- Associate all models ---
 Object.values(db)
-   .filter((model) => typeof model.associate === 'function')
-   .forEach((model) => model.associate(db))
+  .filter((model) => typeof model.associate === "function")
+  .forEach((model) => model.associate(db));
 
-export default db
-export { sequelize, Sequelize }
+export default db;
+export { sequelize, Sequelize };
