@@ -1,7 +1,9 @@
 // moovy-api/src/services/admin/qnaService.js
 
+import { Op, Sequelize } from 'sequelize'
+
 import db from '../../models/index.js'
-const { Qna, QnaImage } = db
+const { Qna, QnaImage, User } = db
 
 // 1) QNA 답변
 export const post = async (adminId, qna_id, a_title, a_content, images) => {
@@ -38,28 +40,58 @@ export const post = async (adminId, qna_id, a_title, a_content, images) => {
 }
 
 // 3) QNA 목록 가져오기
-export const getList = async (page = 1, limit = 10) => {
-   const offset = (page - 1) * limit
+export const getList = async (page = 1, limit = 10, filters = {}) => {
+   const safePage = Math.max(1, Number(page))
+   const safeLimit = Math.min(50, Number(limit))
+   const offset = (safePage - 1) * safeLimit
+
+   const where = {}
+   if (filters.user_id) where.user_id = Number(filters.user_id)
+   if (filters.state) where.state = filters.state
+   if (filters.q_title) where.q_title = { [Op.like]: `%${filters.q_title}%` }
+
+   if (filters.created_start || filters.created_end) {
+      const start = filters.created_start || filters.created_end
+      const end = filters.created_end || filters.created_start
+      const startAt = new Date(`${start}T00:00:00.000`)
+      const endAt = new Date(`${end}T23:59:59.999`)
+      where.createdAt = { [Op.between]: [startAt, endAt] }
+   }
+
+   const userWhere = {}
+   if (filters.nickname) userWhere.name = { [Op.like]: `%${filters.nickname}%` }
+
    const { count, rows: qnas } = await Qna.findAndCountAll({
+      where,
       include: [
          {
+            model: User,
+            attributes: ['user_id', 'name', 'profile_img'],
+            required: Object.keys(userWhere).length > 0,
+            where: Object.keys(userWhere).length > 0 ? userWhere : undefined,
+         },
+         {
             model: QnaImage,
-            as: 'qnaImages',
-            attributes: ['qna_img_id', 'img_url', 'order'],
+            attributes: ['image_id', 'img_url', 'order'],
+            required: false,
          },
       ],
       offset,
-      limit,
-      order: [['createdAt', 'DESC']],
+      limit: safeLimit,
+      order: [
+         [Sequelize.literal("CASE WHEN `Qna`.`state` = 'PENDING' THEN 0 ELSE 1 END"), 'ASC'],
+         ['createdAt', 'ASC'],
+      ],
+      distinct: true,
    })
    return {
       success: true,
       data: {
          pagination: {
-            page,
-            limit,
+            page: safePage,
+            limit: safeLimit,
             total: count,
-            totalPages: Math.ceil(count / limit),
+            totalPages: Math.ceil(count / safeLimit),
          },
          list: qnas,
       },

@@ -17,6 +17,20 @@ export const getQnaSchema = z.object({
 export const getListSchema = z.object({
    page: z.coerce.number().int().positive().default(1),
    limit: z.coerce.number().int().positive().max(50).default(10),
+
+   // admin list filters (optional)
+   user_id: z.coerce.number().int().positive().optional(),
+   nickname: z.string().trim().min(1).optional(),
+   q_title: z.string().trim().min(1).optional(),
+   state: z.enum(['PENDING', 'FULFILLED']).optional(),
+   created_start: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .optional(),
+   created_end: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .optional(),
 })
 
 export const deleteQnaSchema = z.object({
