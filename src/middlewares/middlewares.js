@@ -2,9 +2,50 @@
 import jwt from 'jsonwebtoken'
 import { parseBearer, toUnifiedUser, getExistingUser } from '../utils/authUtils.js'
 
+function isDevBypassEnabled() {
+   return String(process.env.NODE_ENV || '').toLowerCase() === 'development'
+}
+
+function ensureDevUser(req, kind = 'user') {
+   if (!req) return
+   const existing = getExistingUser(req)
+   if (existing) {
+      if (!req.user) req.user = existing
+      if (!req.authUser) req.authUser = existing
+      return
+   }
+
+   const u =
+      kind === 'admin'
+         ? {
+              id: 1,
+              user_id: 1,
+              admin_id: 1,
+              role: 'SUPERADMIN',
+              name: 'dev-admin',
+              email: 'dev-admin@local',
+           }
+         : {
+              id: 1,
+              user_id: 1,
+              role: 'USER',
+              name: 'dev-user',
+              email: 'dev-user@local',
+           }
+
+   req.user = u
+   req.authUser = u
+}
+
 /** 전역 선행 미들웨어: Authorization 헤더가 있으면 JWT를 검증해 req.authUser에 주입 */
 export function hydrateAuthFromToken(req, _res, next) {
    try {
+      if (isDevBypassEnabled()) {
+         // 전역 주입이 필요한 경우(로그인 의존 코드 방지)
+         ensureDevUser(req, 'admin')
+         return next()
+      }
+
       const raw = req.headers.authorization || req.get('Authorization') || ''
       const token = parseBearer(raw)
       if (!token) return next()
@@ -21,6 +62,11 @@ export function hydrateAuthFromToken(req, _res, next) {
 
 /** 로그인 필요(세션 || 유효 JWT) */
 export function isLoggedIn(req, _res, next) {
+   if (isDevBypassEnabled()) {
+      ensureDevUser(req, 'user')
+      return next()
+   }
+
    const me = getExistingUser(req)
    if (me) return next()
    const error = new Error('로그인이 필요합니다.')
@@ -30,6 +76,8 @@ export function isLoggedIn(req, _res, next) {
 
 /** 비로그인만 허용 */
 export function isNotLoggedIn(req, _res, next) {
+   if (isDevBypassEnabled()) return next()
+
    const me = getExistingUser(req)
    if (!me) return next()
    const error = new Error('이미 로그인 상태입니다.')
@@ -40,6 +88,11 @@ export function isNotLoggedIn(req, _res, next) {
 /** 순수 JWT만 강제하고 싶을 때 (세션 무시) */
 export function verifyToken(req, _res, next) {
    try {
+      if (isDevBypassEnabled()) {
+         ensureDevUser(req, 'user')
+         return next()
+      }
+
       const raw = req.headers.authorization || req.get('Authorization') || ''
       const token = parseBearer(raw)
       if (!token) {
@@ -65,6 +118,11 @@ export function verifyToken(req, _res, next) {
 
 /** 관리자 전용 보호(세션 || 토큰) */
 export function requireAdminAuth(req, _res, next) {
+   if (isDevBypassEnabled()) {
+      ensureDevUser(req, 'admin')
+      return next()
+   }
+
    const me = getExistingUser(req)
    if (!me) {
       const error = new Error('로그인이 필요합니다.')
@@ -84,6 +142,11 @@ export function requireAdminAuth(req, _res, next) {
 export function requireRole(roles = []) {
    const allow = roles.map((r) => String(r).toUpperCase())
    return (req, _res, next) => {
+      if (isDevBypassEnabled()) {
+         ensureDevUser(req, 'admin')
+         return next()
+      }
+
       const me = getExistingUser(req)
       if (!me) {
          const error = new Error('로그인이 필요합니다.')

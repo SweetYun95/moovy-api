@@ -41,3 +41,13 @@ export const forceWithdrawalBodySchema = z.object({
    reason: z.string().trim().min(2).max(2000),
    confirm: z.coerce.boolean(),
 })
+
+// 관리자: 사용자 프로필(닉네임) 수정
+export const adminUpdateUserProfileBodySchema = z
+   .object({
+      name: z.string().trim().min(1).max(40).optional(),
+      email: z.string().trim().email().optional(),
+   })
+   .refine((v) => v.name !== undefined || v.email !== undefined, {
+      message: '수정할 값이 없습니다.',
+   })
