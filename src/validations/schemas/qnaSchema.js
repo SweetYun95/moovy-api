@@ -31,6 +31,14 @@ export const getListSchema = z.object({
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/)
       .optional(),
+   answered_start: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .optional(),
+   answered_end: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .optional(),
 })
 
 export const deleteQnaSchema = z.object({

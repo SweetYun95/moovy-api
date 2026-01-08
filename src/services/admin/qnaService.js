@@ -3,7 +3,7 @@
 import { Op, Sequelize } from 'sequelize'
 
 import db from '../../models/index.js'
-const { Qna, QnaImage, User } = db
+const { Qna, QnaImage, User, AdminUser } = db
 
 // 1) QNA 답변
 export const post = async (adminId, qna_id, a_title, a_content, images) => {
@@ -58,6 +58,15 @@ export const getList = async (page = 1, limit = 10, filters = {}) => {
       where.createdAt = { [Op.between]: [startAt, endAt] }
    }
 
+   if (filters.answered_start || filters.answered_end) {
+      const start = filters.answered_start || filters.answered_end
+      const end = filters.answered_end || filters.answered_start
+      const startAt = new Date(`${start}T00:00:00.000`)
+      const endAt = new Date(`${end}T23:59:59.999`)
+      where.updatedAt = { [Op.between]: [startAt, endAt] }
+      if (!filters.state) where.state = 'FULFILLED'
+   }
+
    const userWhere = {}
    if (filters.nickname) userWhere.name = { [Op.like]: `%${filters.nickname}%` }
 
@@ -69,6 +78,11 @@ export const getList = async (page = 1, limit = 10, filters = {}) => {
             attributes: ['user_id', 'name', 'profile_img'],
             required: Object.keys(userWhere).length > 0,
             where: Object.keys(userWhere).length > 0 ? userWhere : undefined,
+         },
+         {
+            model: AdminUser,
+            attributes: ['admin_id', 'name'],
+            required: false,
          },
          {
             model: QnaImage,
