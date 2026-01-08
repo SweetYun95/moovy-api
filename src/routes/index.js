@@ -30,7 +30,7 @@ router.use('/qna', qnaRouter)
 router.use('/user', userRouter)
 router.use('/popular', popularRoute)
 
-// 어드민 네임스페이스
+// 어드민 네임스페이스 (app.js에서 /api prefix)
 router.use('/admin', adminRouter)
 
 export default router
