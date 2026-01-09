@@ -2,11 +2,11 @@
 import jwt from 'jsonwebtoken'
 import { parseBearer, toUnifiedUser, getExistingUser } from '../utils/authUtils.js'
 
-function isDevBypassEnabled() {
+export function isDevBypassEnabled() {
    return String(process.env.NODE_ENV || '').toLowerCase() === 'development'
 }
 
-function ensureDevUser(req, kind = 'user') {
+export function ensureDevUser(req, kind = 'user') {
    if (!req) return
    const existing = getExistingUser(req)
    if (existing) {

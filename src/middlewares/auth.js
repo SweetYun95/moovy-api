@@ -2,43 +2,8 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { parseBearer, toUnifiedUser, getExistingUser } from '../utils/authUtils.js'
-
+import { isDevBypassEnabled, ensureDevUser } from './middlewares.js'
 dotenv.config()
-
-function isDevBypassEnabled() {
-   return String(process.env.NODE_ENV || '').toLowerCase() === 'development'
-}
-
-function ensureDevUser(req, kind = 'user') {
-   if (!req) return
-   const pre = getExistingUser(req)
-   if (pre) {
-      if (!req.user) req.user = pre
-      if (!req.authUser) req.authUser = pre
-      return
-   }
-
-   const u =
-      kind === 'admin'
-         ? {
-              id: 1,
-              user_id: 1,
-              admin_id: 1,
-              role: 'SUPERADMIN',
-              name: 'dev-admin',
-              email: 'dev-admin@local',
-           }
-         : {
-              id: 1,
-              user_id: 1,
-              role: 'USER',
-              name: 'dev-user',
-              email: 'dev-user@local',
-           }
-
-   req.user = u
-   req.authUser = u
-}
 
 /**
  * requireAuth

@@ -19,8 +19,8 @@ export const post = async (req, res, next) => {
 // 3) QNA 목록 가져오기
 export const getList = async (req, res, next) => {
    try {
-      const { page, limit } = req.validated.query || req.query
-      const result = await qnaService.getList(page, limit)
+      const { page, limit, ...filters } = req.validated.query || req.query
+      const result = await qnaService.getList(page, limit, filters)
       res.json(result)
    } catch (error) {
       next(error)

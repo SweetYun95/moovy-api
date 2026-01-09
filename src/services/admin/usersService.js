@@ -230,8 +230,8 @@ export async function forceWithdrawal({ user_id, admin_id, reason, confirm }) {
 }
 
 // ──────────────────────────────────────────────────────────────
-// 관리자: 사용자 프로필(닉네임/이메일-변경불가) 수정
-export async function updateUserProfileByAdmin({ user_id, name, email }) {
+// 관리자: 사용자 프로필(닉네임) 수정
+export async function updateUserProfileByAdmin({ user_id, name }) {
    return db.sequelize.transaction(async (t) => {
       const user = await db.User.findByPk(user_id, {
          transaction: t,
@@ -240,10 +240,6 @@ export async function updateUserProfileByAdmin({ user_id, name, email }) {
       })
       if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
       if (user.state === USER_STATE.DELETED) throw httpError(400, '탈퇴 처리된 사용자는 수정할 수 없습니다.')
-
-      if (email != null && email !== user.email) {
-         throw httpError(400, '이메일은 수정할 수 없습니다.')
-      }
 
       const patch = {}
       if (name != null) patch.name = name
@@ -252,30 +248,6 @@ export async function updateUserProfileByAdmin({ user_id, name, email }) {
          await user.update(patch, { transaction: t })
       }
 
-      const data = user.toJSON ? user.toJSON() : user
-      return {
-         user_id: data.user_id,
-         name: data.name,
-         email: data.email,
-         profile_img: data.profile_img,
-         state: data.state,
-      }
-   })
-}
-
-// ──────────────────────────────────────────────────────────────
-// 관리자: 사용자 프로필 이미지 업로드
-export async function updateUserProfileImageByAdmin({ user_id, imagePath }) {
-   return db.sequelize.transaction(async (t) => {
-      const user = await db.User.findByPk(user_id, {
-         transaction: t,
-         paranoid: false,
-         lock: t.LOCK.UPDATE,
-      })
-      if (!user) throw httpError(404, '사용자를 찾을 수 없습니다.')
-      if (user.state === USER_STATE.DELETED) throw httpError(400, '탈퇴 처리된 사용자는 수정할 수 없습니다.')
-
-      await user.update({ profile_img: imagePath }, { transaction: t })
       const data = user.toJSON ? user.toJSON() : user
       return {
          user_id: data.user_id,
