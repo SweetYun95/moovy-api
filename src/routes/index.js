@@ -7,6 +7,7 @@ import commentRouter from './commentRoute.js'
 import replyRouter from './replyRoute.js'
 import ratingRouter from './ratingRoute.js'
 import favoriteRouter from './favoriteRoute.js'
+import likeRouter from './likeRoute.js' // ✅추가
 import qnaRouter from './qnaRoute.js'
 import userRouter from './userRoute.js'
 import popularRoute from './popularRoute.js'
@@ -26,6 +27,7 @@ router.use('/comments', commentRouter)
 router.use('/replies', replyRouter)
 router.use('/ratings', ratingRouter)
 router.use('/favorites', favoriteRouter)
+router.use('/likes', likeRouter) // ✅추가
 router.use('/qna', qnaRouter)
 router.use('/user', userRouter)
 router.use('/popular', popularRoute)
