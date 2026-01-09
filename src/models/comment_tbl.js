@@ -19,7 +19,7 @@ export default class CommentTbl extends Model {
                type: DataTypes.INTEGER,
                allowNull: false,
             },
-            contnet: {
+            content: {
                type: DataTypes.TEXT,
                allowNull: false,
             },

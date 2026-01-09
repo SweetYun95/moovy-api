@@ -15,6 +15,11 @@ export default class Topic extends Model {
                type: DataTypes.INTEGER,
                allowNull: false,
             },
+            is_admin_recommended: {
+               type: DataTypes.BOOLEAN,
+               allowNull: false,
+               defaultValue: false,
+            },
             start_at: {
                type: DataTypes.DATE,
                allowNull: false,
