@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 
 import db from '../models/index.js'
-const { Qna, QnaImage } = db
+const { Qna, QnaImage, User, AdminUser } = db
 
 // 1) QNA 작성
 export const post = async (userId, title, content, files) => {
@@ -36,7 +36,20 @@ export const post = async (userId, title, content, files) => {
 
 // 2) 특정 QNA 가져오기
 export const getQna = async (userId, qna_id, adminId) => {
-   const qna = await Qna.findByPk(qna_id)
+   const qna = await Qna.findByPk(qna_id, {
+      include: [
+         {
+            model: User,
+            attributes: ['user_id', 'name', 'profile_img'],
+            required: false,
+         },
+         {
+            model: AdminUser,
+            attributes: ['admin_id', 'name'],
+            required: false,
+         },
+      ],
+   })
    if (!qna) {
       const error = new Error('문의내역을 찾을 수 없습니다.')
       error.status = 400

@@ -113,28 +113,6 @@ export const updateProfile = async (req, res, next) => {
    }
 }
 
-// 프로필 이미지 업로드
-export const updateProfileImage = async (req, res, next) => {
-   try {
-      const { user_id } = req.validated?.params || req.params
-      const imagePath = req.file ? req.file.path : null
-
-      if (!imagePath) {
-         const err = new Error('프로필 이미지가 제공되지 않았습니다.')
-         err.status = 400
-         throw err
-      }
-
-      const user = await usersService.updateUserProfileImageByAdmin({ user_id, imagePath })
-      res.json({ success: true, data: user })
-   } catch (e) {
-      if (e && req.file) {
-         fs.unlink(req.file.path).catch(() => {})
-      }
-      next(e)
-   }
-}
-
 // 프로필 이미지 기본값(삭제)
 export const resetProfileImage = async (req, res, next) => {
    try {

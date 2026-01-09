@@ -2,9 +2,7 @@
 import express from 'express'
 import { requireAdminAuth, requireRole } from '../../middlewares/middlewares.js'
 import { listUsersValidator, userDetailValidator, createSanctionValidator, updateSanctionValidator, deleteSanctionValidator, forceWithdrawalValidator, adminUpdateUserProfileValidator, adminUserProfileImageParamsValidator } from '../../validations/validators/admin/usersValidators.js'
-import { ADMIN_ROLES } from '../../constants/admin/userConstants.js'
 import * as ctrl from '../../controllers/admin/usersController.js'
-import { uploadUserProfile } from '../../middlewares/upload.js'
 
 const router = express.Router()
 
@@ -17,9 +15,6 @@ router.get('/:user_id', requireAdminAuth, userDetailValidator, ctrl.detail)
 
 // 2-1) 유저 프로필(닉네임) 수정 → PUT /api/admin/users/:user_id/profile
 router.put('/:user_id/profile', requireAdminAuth, adminUpdateUserProfileValidator, ctrl.updateProfile)
-
-// 2-2) 유저 프로필 이미지 업로드 → PUT /api/admin/users/:user_id/profile/image
-router.put('/:user_id/profile/image', requireAdminAuth, adminUserProfileImageParamsValidator, uploadUserProfile.single('image'), ctrl.updateProfileImage)
 
 // 2-3) 유저 프로필 이미지 기본값(삭제) → DELETE /api/admin/users/:user_id/profile/image
 router.delete('/:user_id/profile/image', requireAdminAuth, adminUserProfileImageParamsValidator, ctrl.resetProfileImage)
