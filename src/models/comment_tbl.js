@@ -56,5 +56,9 @@ export default class CommentTbl extends Model {
          foreignKey: 'comment_id',
          sourceKey: 'comment_id',
       })
+      CommentTbl.hasMany(db.CommentLike, {
+         foreignKey: 'comment_id',
+         sourceKey: 'comment_id',
+      })
    }
 }

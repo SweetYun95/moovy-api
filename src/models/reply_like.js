@@ -1,60 +1,54 @@
-// moovy-api/src/models/comment_reply.js
+// moovy-api/src/models/reply_like.js
 import { Model, DataTypes } from 'sequelize'
 
-export default class CommentReply extends Model {
+export default class ReplyLike extends Model {
    static init(sequelize) {
       return super.init(
          {
-            reply_id: {
+            id: {
                type: DataTypes.INTEGER,
                allowNull: false,
                primaryKey: true,
                autoIncrement: true,
             },
-            comment_id: {
-               type: DataTypes.INTEGER,
-               allowNull: false,
-            },
             user_id: {
                type: DataTypes.INTEGER,
                allowNull: false,
             },
-            content: {
-               type: DataTypes.TEXT,
+            reply_id: {
+               type: DataTypes.INTEGER,
                allowNull: false,
             },
          },
          {
             sequelize,
-            modelName: 'CommentReply',
-            tableName: 'comment_replies',
+            modelName: 'ReplyLike',
+            tableName: 'reply_likes',
             timestamps: true,
-            paranoid: true,
+            paranoid: false, // 좋아요 취소는 row 삭제로 처리(단순/정석)
             underscored: true,
             charset: 'utf8',
             collate: 'utf8_general_ci',
+            indexes: [
+               {
+                  unique: true,
+                  fields: ['user_id', 'reply_id'], // 한 유저가 같은 대댓글에 중복 좋아요 방지
+               },
+            ],
          }
       )
    }
 
    static associate(db) {
-      CommentReply.belongsTo(db.CommentTbl, {
-         foreignKey: 'comment_id',
-         targetKey: 'comment_id',
-         onDelete: 'CASCADE',
-      })
-      CommentReply.belongsTo(db.User, {
+      ReplyLike.belongsTo(db.User, {
          foreignKey: 'user_id',
          targetKey: 'user_id',
          onDelete: 'CASCADE',
       })
-      CommentReply.hasMany(db.CommentReplyReport, {
+      ReplyLike.belongsTo(db.CommentReply, {
          foreignKey: 'reply_id',
-         sourceKey: 'reply_id',
-      })
-      CommentReply.hasMany(db.ReplyLike, {
-         foreignKey: 'reply_id',
-         sourceKey: 'reply_id',
+         targetKey: 'reply_id',
+         onDelete: 'CASCADE',
       })
    }
 }
