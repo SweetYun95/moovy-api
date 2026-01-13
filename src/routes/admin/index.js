@@ -3,17 +3,19 @@ import { Router } from 'express'
 import usersRouter from './usersRoute.js'
 import authRouter from './authRoute.js'
 import qnaRouter from './qnaRoute.js'
-import dashboardRouter from './dashboardRoute.js' // ✅ 추가
-import topicsRouter from './topicsRoute.js' // ✅ 추가
+import dashboardRouter from './dashboardRoute.js'
+import topicsRouter from './topicsRoute.js'
 import reportsRouter from './reportsRoute.js'
+import tmdbRouter from './tmdbRoute.js' // ✅ 추가
 
 const router = Router()
 
 router.use('/users', usersRouter)
 router.use('/auth', authRouter)
 router.use('/qna', qnaRouter)
-router.use('/dashboard', dashboardRouter) // ✅ 추가
-router.use('/topics', topicsRouter) // ✅ 추가
+router.use('/dashboard', dashboardRouter)
+router.use('/topics', topicsRouter)
 router.use('/reports', reportsRouter)
+router.use('/tmdb', tmdbRouter)  // ✅ 추가
 
 export default router
