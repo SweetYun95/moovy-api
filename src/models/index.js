@@ -11,6 +11,7 @@ import UserDetail from './user_detail.js'
 import UserSanction from './user_sanction.js'
 import AdminUser from './admin_user.js'
 import PasswordResetToken from './password_reset_token.js'
+import AdminHistory from './admin_history.js'
 
 /* =========================
  * Video / Content
@@ -70,6 +71,7 @@ const db = {
    UserSanction,
    AdminUser,
    PasswordResetToken,
+   AdminHistory,
 
    // Video / Content
    VideoContent,

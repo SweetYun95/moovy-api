@@ -13,6 +13,15 @@ export default class UserSanction extends Model {
                type: DataTypes.INTEGER,
                allowNull: false,
             },
+
+            // ✅ 신규: 제재 레벨 (0부터 시작)
+            // 예: 0=경고1회, 1=경고2회 ... 같은 식으로 팀 룰에 맞게 매핑
+            level: {
+               type: DataTypes.INTEGER,
+               allowNull: false,
+               defaultValue: 0,
+            },
+
             start_at: {
                type: DataTypes.DATE,
                allowNull: false,
