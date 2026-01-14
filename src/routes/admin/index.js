@@ -6,7 +6,8 @@ import qnaRouter from './qnaRoute.js'
 import dashboardRouter from './dashboardRoute.js'
 import topicsRouter from './topicsRoute.js'
 import reportsRouter from './reportsRoute.js'
-import tmdbRouter from './tmdbRoute.js' // ✅ 추가
+import tmdbRouter from './tmdbRoute.js'
+import historyRouter from './history.js'
 
 const router = Router()
 
@@ -16,6 +17,7 @@ router.use('/qna', qnaRouter)
 router.use('/dashboard', dashboardRouter)
 router.use('/topics', topicsRouter)
 router.use('/reports', reportsRouter)
-router.use('/tmdb', tmdbRouter)  // ✅ 추가
+router.use('/tmdb', tmdbRouter)
+router.use('/', historyRouter)
 
 export default router
