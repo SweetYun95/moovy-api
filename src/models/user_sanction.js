@@ -15,7 +15,7 @@ export default class UserSanction extends Model {
             },
 
             // ✅ 신규: 제재 레벨 (0부터 시작)
-            // 예: 0=경고1회, 1=경고2회 ... 같은 식으로 팀 룰에 맞게 매핑
+            // 예: 0=경고 0회, 1=경고 1회 ... 같은 식으로 팀 룰에 맞게 매핑
             level: {
                type: DataTypes.INTEGER,
                allowNull: false,
