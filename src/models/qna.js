@@ -35,10 +35,17 @@ export default class Qna extends Model {
                type: DataTypes.TEXT,
                allowNull: true,
             },
+
             state: {
                type: DataTypes.ENUM('PENDING', 'FULFILLED'),
                allowNull: false,
                defaultValue: 'PENDING',
+            },
+
+            // ✅ 신규: 답변 완료 시각
+            answered_at: {
+               type: DataTypes.DATE,
+               allowNull: true,
             },
          },
          {
@@ -59,11 +66,13 @@ export default class Qna extends Model {
          foreignKey: 'qna_id',
          sourceKey: 'qna_id',
       })
+
       Qna.belongsTo(db.User, {
          foreignKey: 'user_id',
          targetKey: 'user_id',
          onDelete: 'CASCADE',
       })
+
       Qna.belongsTo(db.AdminUser, {
          foreignKey: 'admin_id',
          targetKey: 'admin_id',
