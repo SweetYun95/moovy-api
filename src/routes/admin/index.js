@@ -7,7 +7,7 @@ import dashboardRouter from './dashboardRoute.js'
 import topicsRouter from './topicsRoute.js'
 import reportsRouter from './reportsRoute.js'
 import tmdbRouter from './tmdbRoute.js'
-import historyRouter from './history.js'
+import historyRouter from './historyRoute.js'
 
 const router = Router()
 
