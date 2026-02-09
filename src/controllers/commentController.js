@@ -8,7 +8,8 @@ const { CommentTbl, User, Topic } = db
 export const createComment = async (req, res) => {
    try {
       const { topic_id, content } = req.body
-      const user_id = req.user.user_id // 로그인 유저 정보
+      const user_id = req.user?.user_id || req.authUser?.user_id
+      if (!user_id) return res.status(401).json({ message: '로그인이 필요합니다.' })
 
       if (!topic_id || !content) return res.status(400).json({ message: 'topic_id와 content는 필수입니다.' })
 

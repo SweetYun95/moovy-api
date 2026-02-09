@@ -7,10 +7,11 @@ import commentRouter from './commentRoute.js'
 import replyRouter from './replyRoute.js'
 import ratingRouter from './ratingRoute.js'
 import favoriteRouter from './favoriteRoute.js'
-import likeRouter from './likeRoute.js' // ✅추가
+import likeRouter from './likeRoute.js'
 import qnaRouter from './qnaRoute.js'
 import userRouter from './userRoute.js'
 import popularRoute from './popularRoute.js'
+import topicRouter from './topicRoute.js' // ✅ 추가
 
 // 관리자
 import adminRouter from './admin/index.js'
@@ -27,10 +28,11 @@ router.use('/comments', commentRouter)
 router.use('/replies', replyRouter)
 router.use('/ratings', ratingRouter)
 router.use('/favorites', favoriteRouter)
-router.use('/likes', likeRouter) // ✅추가
+router.use('/likes', likeRouter)
 router.use('/qna', qnaRouter)
 router.use('/user', userRouter)
 router.use('/popular', popularRoute)
+router.use('/topics', topicRouter) // ✅ 추가
 
 // 어드민 네임스페이스 (app.js에서 /api prefix)
 router.use('/admin', adminRouter)
