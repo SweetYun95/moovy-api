@@ -18,6 +18,6 @@ router.use('/dashboard', dashboardRouter)
 router.use('/topics', topicsRouter)
 router.use('/reports', reportsRouter)
 router.use('/tmdb', tmdbRouter)
-router.use('/', historyRouter)
+router.use('/histories', historyRouter)
 
 export default router
